@@ -1,0 +1,206 @@
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grapheditor</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="grapheditor/styles/grapheditor.css">
+	<script type="text/javascript">
+		// Parses URL parameters. Supported parameters are:
+		// - lang=xy: Specifies the language of the user interface.
+		// - touch=1: Enables a touch-style user interface.
+		// - storage=local: Enables HTML5 local storage.
+		// - chrome=0: Chromeless mode.
+		var urlParams = (function(url)
+		{
+			var result = new Object();
+			var idx = url.lastIndexOf('?');
+
+			if (idx > 0)
+			{
+				var params = url.substring(idx + 1).split('&');
+
+				for (var i = 0; i < params.length; i++)
+				{
+					idx = params[i].indexOf('=');
+
+					if (idx > 0)
+					{
+						result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
+					}
+				}
+			}
+
+			return result;
+		})(window.location.href);
+
+		// Default resources are included in grapheditor resources
+		mxLoadResources = false;
+		mxBasePath = 'grapheditor/src';
+	</script>
+	<script type="text/javascript" src="grapheditor/js/Init.js"></script>
+	<script type="text/javascript" src="grapheditor/deflate/pako.min.js"></script>
+	<script type="text/javascript" src="grapheditor/deflate/base64.js"></script>
+	<script type="text/javascript" src="grapheditor/jscolor/jscolor.js"></script>
+	<script type="text/javascript" src="grapheditor/sanitizer/sanitizer.min.js"></script>
+	<script type="text/javascript" src="grapheditor/src/js/mxClient.js"></script>
+	<script type="text/javascript" src="grapheditor/js/EditorUi.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Editor.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Sidebar.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Graph.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Format.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Shapes.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Actions.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Menus.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Toolbar.js"></script>
+	<script type="text/javascript" src="grapheditor/js/Dialogs.js"></script>
+  <!-- <script type="text/javascript" src="grapheditor/echarts.min.js"></script> -->
+
+  <!-- <script type="text/javascript" src="grapheditor/SaveUI.js"></script> -->
+</head>
+<body class="geEditor">
+	<script type="text/javascript">
+		// Extends EditorUi to update I/O action states based on availability of backend
+    function draw(){
+      console.log('11')
+      // var chartDom = document.getElementById('content');
+      // var myChart = echarts.init(chartDom);
+      // var option;
+
+      // option = {
+      //   tooltip: {
+      //     formatter: '{a} <br/>{b} : {c}%'
+      //   },
+      //   series: [
+      //     {
+      //       name: 'Pressure',
+      //       type: 'gauge',
+      //       progress: {
+      //         show: true
+      //       },
+      //       detail: {
+      //         valueAnimation: true,
+      //         formatter: '{value}'
+      //       },
+      //       data: [
+      //         {
+      //           value: 50,
+      //           name: 'SCORE'
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // };
+
+      // option && myChart.setOption(option);
+    }
+		(function()
+		{
+      /**
+      * 控件库
+      */
+      Sidebar.prototype.addControlLibraryPalette = function(expand)
+      {
+	      // var sb = this;
+	      var lineTags = 'line lines connector connectors connection connections arrow arrows '
+	      this.setCurrentSearchEntryLibrary('general', 'controlLibrary');
+
+	      var fns = [
+   	      this.createVertexTemplateEntry('text;strokeColor=none;fillColor=none;html=1;fontSize=14;verticalAlign=middle;align=center;fillColor=#ffffff;gradientColor=#ffffff;strokeColor=#000000;', 60, 40, 'Text', '文本框', null, null, 'text 文本 文本框'),
+	 	      this.createVertexTemplateEntry('rounded=1;whiteSpace=wrap;html=1;fillWeight=4;hachureGap=8;hachureAngle=45;fillColor=#D9D9D9;sketch=1;fontColor=#FFFFFF;fontSize=18;strokeColor=none;shadow=1;', 100, 50, 'Button', '按钮', true, null, 'button 按钮'),
+          this.createEdgeTemplateEntry('shape=flexArrow;endArrow=classic;html=1;', 50, 50, '', '流动管子', null, lineTags + '流动管子'),
+          this.createEdgeTemplateEntry('shape=filledEdge;rounded=0;fixDash=1;endArrow=none;strokeWidth=10;fillColor=#ffffff;edgeStyle=orthogonalEdgeStyle;', 60, 40, '', '流动管子'),
+          this.createEdgeTemplateEntry('shape=flexArrow;endArrow=classic;startArrow=classic;html=1;', 50, 50, '', '流动管子', null, lineTags + '流动管子'),
+	      ];
+
+	      this.addPaletteFunctions('controlLibrary', mxResources.get('controlLibrary'), (expand != null) ? expand : true, fns);
+	      this.setCurrentSearchEntryLibrary();
+      };
+      Sidebar.prototype.init = function()
+      {
+	      var dir = STENCIL_PATH;
+
+	      this.addSearchPalette(true);
+        this.addControlLibraryPalette(true);
+	      this.addGeneralPalette(true);
+	      this.addMiscPalette(false);
+	      this.addAdvancedPalette(false);
+	      this.addBasicPalette(dir);
+
+	      this.setCurrentSearchEntryLibrary('arrows');
+	      this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
+		      ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+	      this.setCurrentSearchEntryLibrary();
+
+	      // this.addUmlPalette(false);
+	      // this.addBpmnPalette(dir, false);
+
+	      this.setCurrentSearchEntryLibrary('flowchart');
+	      this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml',
+		      ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+	      this.setCurrentSearchEntryLibrary();
+
+	      this.setCurrentSearchEntryLibrary('clipart');
+	      this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
+		      ['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
+		      'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
+		      'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
+		      'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
+		      'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
+		      {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
+		        'Router_Icon': 'router switch'});
+	      this.setCurrentSearchEntryLibrary();
+      };
+      // console.log(window)
+			var editorUiInit = EditorUi.prototype.init;
+
+			EditorUi.prototype.init = function()
+			{
+				editorUiInit.apply(this, arguments);
+				this.actions.get('export').setEnabled(false);
+
+				// Updates action states which require a backend
+				if (!Editor.useLocalStorage)
+				{
+					mxUtils.post(OPEN_URL, '', mxUtils.bind(this, function(req)
+					{
+						var enabled = req.getStatus() != 404;
+						this.actions.get('open').setEnabled(enabled || Graph.fileSupport);
+						this.actions.get('import').setEnabled(enabled || Graph.fileSupport);
+						this.actions.get('save').setEnabled(enabled);
+						this.actions.get('saveAs').setEnabled(enabled);
+						this.actions.get('export').setEnabled(enabled);
+					}));
+				}
+			};
+
+			// Adds required resources (disables loading of fallback properties, this can only
+			// be used if we know that all keys are defined in the language specific file)
+			mxResources.loadDefaultBundle = false;
+			var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
+				mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
+
+			// Fixes possible asynchronous requests
+			mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr)
+			{
+				// Adds bundle text to resources
+				mxResources.parse(xhr[0].getText());
+
+				// Configures the default graph theme
+				var themes = new Object();
+				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement();
+
+				// Main
+				const editorUi=new EditorUi(new Editor(urlParams['chrome'] == '0', themes)).getThis();
+        window.grapheditor=editorUi;
+        // const ww=window.grapheditor;
+        // console.log('ww',window.grapheditor)
+			}, function()
+			{
+				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
+			});
+		})();
+	</script>
+</body>
+</html>
