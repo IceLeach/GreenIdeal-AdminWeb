@@ -18,6 +18,7 @@ const BasicLayout = (props: any) => {
     >
       <ProLayout
         {...defaultProps}
+        layout='mix'
         breadcrumbRender={false}
         location={{ pathname }}
         fixSiderbar

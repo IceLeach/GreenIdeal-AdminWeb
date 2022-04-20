@@ -1,3 +1,17 @@
 .box{
   height: 600px;
+  .closeButton{
+    display: flex;
+    height: 0;
+    :global{
+      .anticon{
+        position: relative;
+        z-index: 1;
+        margin-left: auto;
+        font-size: 18px;
+        padding: 4px;
+        cursor: pointer;
+      }
+    }
+  }
 }

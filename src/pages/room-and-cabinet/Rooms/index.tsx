@@ -26,6 +26,7 @@ const originData: DataType[] = [
 const Rooms: React.FC = () => {
   const ref = useRef<ActionType>();
   const [editDrawerData, setEditDrawerData] = useState<{ visible: boolean, data?: any }>({ visible: false });
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   const columns: ProColumns<DataType>[] = [
     {
@@ -92,7 +93,6 @@ const Rooms: React.FC = () => {
     <>
       <ProTable
         columns={columns}
-        rowKey='id'
         request={fetchData}
         headerTitle={
           <Space>
@@ -100,12 +100,19 @@ const Rooms: React.FC = () => {
             <Button>批量删除</Button>
           </Space>
         }
+        rowSelection={{
+          selectedRowKeys,
+          onChange: (keys: any) => {
+            setSelectedRowKeys(keys);
+          },
+        }}
         pagination={{
           pageSize: 20,
           showSizeChanger: true,
         }}
         scroll={{ y: 450 }}
         actionRef={ref}
+        rowKey='id'
         search={{
           defaultCollapsed: false,
           collapseRender: () => <></>,

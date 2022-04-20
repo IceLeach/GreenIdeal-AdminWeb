@@ -1,5 +1,6 @@
-import { message } from 'antd';
 import React, { useEffect } from 'react';
+import { message } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import { Map } from 'react-amap';
 import { Helmet } from 'umi';
 import styles from './index.less';
@@ -7,10 +8,11 @@ import styles from './index.less';
 interface AmapBoxProps {
   visible: boolean;
   onClick: (address: any) => void;
+  onClose: () => void;
 }
 
 const AmapBox: React.FC<AmapBoxProps> = (props) => {
-  const { visible, onClick } = props;
+  const { visible, onClick, onClose } = props;
 
   useEffect(() => {
     // @ts-ignore
@@ -29,6 +31,9 @@ const AmapBox: React.FC<AmapBoxProps> = (props) => {
         className={styles.box}
         style={{ display: visible ? 'block' : 'none' }}
       >
+        <div className={styles.closeButton} onClick={onClose}>
+          <CloseOutlined />
+        </div>
         {visible && (
           <Map
             amapkey={'8d061d84f0f5aa06e467f33c2153dedf'}
@@ -36,7 +41,7 @@ const AmapBox: React.FC<AmapBoxProps> = (props) => {
             zoom={12}
             events={{
               click: (e: any) => {
-                console.log('e', e)
+                // console.log('e', e)
                 // @ts-ignore
                 window.AMap.plugin(["AMap.Geocoder"], function () {
                   // @ts-ignore
