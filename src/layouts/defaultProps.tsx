@@ -2,21 +2,12 @@ import React from 'react';
 import {
   HomeOutlined,
   HistoryOutlined,
-  QuestionCircleOutlined,
-  CloudUploadOutlined,
-  ProfileOutlined,
-  TeamOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
 
 const IconMap = {
   home: <HomeOutlined />,
   history: <HistoryOutlined />,
-  unfinished: <QuestionCircleOutlined />,
-  release: <CloudUploadOutlined />,
-  template: <ProfileOutlined />,
-  user: <TeamOutlined />,
-  adminSet: <SettingOutlined />,
   userSet: <SettingOutlined />,
 };
 export default {
@@ -54,7 +45,25 @@ export default {
             icon: IconMap.userSet,
           }
         ],
-      }
+      },
+      {
+        path: '/rackEquipment',
+        exact: true,
+        name: '机架设备',
+        icon: IconMap.userSet,
+      },
+      {
+        path: '/spareParts',
+        exact: true,
+        name: '配件备件',
+        icon: IconMap.userSet,
+      },
+      {
+        path: '/infrastructure',
+        exact: true,
+        name: '基础设施',
+        icon: IconMap.userSet,
+      },
       // {
       //   path: '/page2',
       //   name: 'mxgraph',

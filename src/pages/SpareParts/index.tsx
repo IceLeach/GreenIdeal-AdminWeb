@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Divider, Space } from 'antd';
+// import { saveAs } from 'file-saver';
+// import base64ToBlob from '@/utils/base64ToBlob';
 import EditDrawer from './components/EditDrawer';
 // import styles from './index.less';
 
@@ -13,17 +15,17 @@ interface DataType {
 const originData: DataType[] = [
   {
     id: '1',
-    name: '机房1',
+    name: '设备1',
     time: '2022-03-15 12:00',
   },
   {
     id: '2',
-    name: '机房2',
+    name: '设备2',
     time: '2022-03-15 13:00',
   },
 ];
 
-const Rooms: React.FC = () => {
+const SpareParts: React.FC = () => {
   const ref = useRef<ActionType>();
   const [editDrawerData, setEditDrawerData] = useState<{ visible: boolean, data?: any }>({ visible: false });
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -33,20 +35,26 @@ const Rooms: React.FC = () => {
       title: '序号',
       dataIndex: 'id',
       search: false,
-      // hideInForm: true,
     },
     {
-      title: '机房名称',
+      title: '资产编号',
+      dataIndex: 'uid',
+    },
+    {
+      title: '备件名称',
       dataIndex: 'name',
     },
     {
-      title: '所在区域',
-      dataIndex: 'address',
+      title: '备件分类',
+      dataIndex: 'classification',
     },
     {
-      title: '最后更新',
-      dataIndex: 'time',
-      valueType: 'dateTime',
+      title: '规格型号',
+      dataIndex: 'specification',
+    },
+    {
+      title: '库存数量',
+      dataIndex: 'count',
       search: false,
     },
     {
@@ -54,6 +62,10 @@ const Rooms: React.FC = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
+          <a>
+            补货
+          </a>
+          <Divider type='vertical' />
           <a
             onClick={() => setEditDrawerData({ visible: true, data: record })}
           >
@@ -96,8 +108,14 @@ const Rooms: React.FC = () => {
         request={fetchData}
         headerTitle={
           <Space>
-            <Button type='primary'>添加机房</Button>
+            <Button type='primary'>添加备件</Button>
             <Button>批量删除</Button>
+            <Button>打印二维码</Button>
+            <Button
+            // onClick={()=> saveAs(new File([base64ToBlob(fileContent)], `${fileDownloadName}.xls`))}
+            >
+              导出到Excel
+            </Button>
           </Space>
         }
         rowSelection={{
@@ -128,4 +146,4 @@ const Rooms: React.FC = () => {
   );
 };
 
-export default Rooms;
+export default SpareParts;

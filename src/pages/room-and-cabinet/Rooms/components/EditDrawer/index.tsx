@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Drawer, Form, Input, message, Tabs, Upload } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Checkbox, Drawer, Form, Input, InputNumber, message, Tabs, Upload } from 'antd';
 import { CheckCircleFilled, CloseCircleFilled, EnvironmentOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
@@ -20,7 +20,9 @@ const EditDrawer: React.FC<EditDrawerProps> = (props) => {
   const { visible, onClose, data } = props;
   const [form] = Form.useForm();
   const [amapVisible, setAmapVisible] = useState<boolean>(false);
-  const [pictureList, setPictureList] = useState<{ uid: string, file: RcFile }[]>([]);
+  const pictureListRef = useRef<{ uid: string, file: RcFile }[]>([]);
+  const [pictureCount, setPictureCount] = useState<number>(0);
+  // const [pictureList, setPictureList] = useState<{ uid: string, file: RcFile }[]>([]);
   const [columnList, setColumnList] = useState<{ id: string, name: string }[]>(columnData);
   const [columnItemRowVisible, setColumnItemRowVisible] = useState<boolean>(false);
   const [columnItemInputValue, setColumnItemInputValue] = useState<string>('');
@@ -43,7 +45,7 @@ const EditDrawer: React.FC<EditDrawerProps> = (props) => {
   }
   const checkForm = () => {
     const formData = form.getFieldsValue();
-    console.log('form', formData, pictureList);
+    console.log('form', formData, pictureListRef.current);
     if (!formData.name || !formData.address || !formData.building || !formData.floor || !formData.area || !formData.height) {
       message.error('基本信息内容有误，请检查表单');
     }
@@ -66,22 +68,28 @@ const EditDrawer: React.FC<EditDrawerProps> = (props) => {
     }
     form.setFieldsValue({ address: addressStr, moreAddress: addressData.regeocode.formattedAddress });
   }
-  const beforeUpload = (file: RcFile, fileList: RcFile[]) => {
-    console.log('f', file, fileList)
-    let length = pictureList.length;
-    const newPictureList = [...pictureList];
-    fileList.forEach(f => {
-      if (length < 6) {
-        newPictureList.push({ uid: f.uid, file: f });
-        length += 1;
-      }
-    });
-    setPictureList(newPictureList);
+  const beforeUpload = (file: RcFile/*, fileList: RcFile[]*/) => {
+    // console.log('f', file)
+    if (pictureListRef.current.length < 6) {
+      pictureListRef.current.push({ uid: file.uid, file: file });
+      setPictureCount(pictureListRef.current.length);
+    }
+    // let length = pictureList.length;
+    // const newPictureList = [...pictureList];
+    // fileList.forEach(f => {
+    //   if (length < 6) {
+    //     newPictureList.push({ uid: f.uid, file: f });
+    //     length += 1;
+    //   }
+    // });
+    // setPictureList(newPictureList);
     return false;
   };
   const onPictureRemove = (file: any) => {
     console.log('r', file);
-    setPictureList(pictureList.filter(item => item.uid !== file.uid));
+    pictureListRef.current = pictureListRef.current.filter(item => item.uid !== file.uid);
+    setPictureCount(pictureListRef.current.length);
+    // setPictureList(pictureList.filter(item => item.uid !== file.uid));
   }
 
   const columnListSort = (props: any) => {
@@ -227,17 +235,17 @@ const EditDrawer: React.FC<EditDrawerProps> = (props) => {
               label='面积(m²)'
               rules={[{ required: true, message: '面积不能为空' }]}
             >
-              <Input />
+              <InputNumber min={0} style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item
               name='height'
               label='层高(m)'
               rules={[{ required: true, message: '层高不能为空' }]}
             >
-              <Input />
+              <InputNumber min={0} style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item
-              label='机房照片'
+              label={`机房照片(${pictureCount}/6)`}
             >
               <Upload
                 listType="picture-card"
@@ -246,6 +254,7 @@ const EditDrawer: React.FC<EditDrawerProps> = (props) => {
                 maxCount={6}
                 beforeUpload={beforeUpload}
                 onRemove={onPictureRemove}
+                className={styles.upload}
               >
                 <PlusOutlined />
               </Upload>

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Button, Divider, Space } from 'antd';
+import { Button, Divider, Select, Space } from 'antd';
+// import print from 'print-js';
 import EditDrawer from './components/EditDrawer';
 // import styles from './index.less';
 
@@ -13,17 +14,17 @@ interface DataType {
 const originData: DataType[] = [
   {
     id: '1',
-    name: '机房1',
+    name: '设备1',
     time: '2022-03-15 12:00',
   },
   {
     id: '2',
-    name: '机房2',
+    name: '设备2',
     time: '2022-03-15 13:00',
   },
 ];
 
-const Rooms: React.FC = () => {
+const Infrastructure: React.FC = () => {
   const ref = useRef<ActionType>();
   const [editDrawerData, setEditDrawerData] = useState<{ visible: boolean, data?: any }>({ visible: false });
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -33,21 +34,22 @@ const Rooms: React.FC = () => {
       title: '序号',
       dataIndex: 'id',
       search: false,
-      // hideInForm: true,
     },
     {
-      title: '机房名称',
+      title: '资产编号',
+      dataIndex: 'uid',
+    },
+    {
+      title: '设施名称',
       dataIndex: 'name',
     },
     {
-      title: '所在区域',
+      title: '所在机房',
       dataIndex: 'address',
     },
     {
-      title: '最后更新',
-      dataIndex: 'time',
-      valueType: 'dateTime',
-      search: false,
+      title: '所在子系统',
+      dataIndex: 'system',
     },
     {
       title: '操作',
@@ -96,8 +98,22 @@ const Rooms: React.FC = () => {
         request={fetchData}
         headerTitle={
           <Space>
-            <Button type='primary'>添加机房</Button>
+            <Button type='primary'>添加设施</Button>
             <Button>批量删除</Button>
+            <Button
+              onClick={() => {
+                // print({
+                //   printable: 'img',
+                //   type: 'html',
+                //   documentTitle: 'img',
+                //   targetStyles: ['*'],
+                //   scanStyles: false,
+                // });
+              }}
+            >
+              打印二维码
+            </Button>
+            <Button>导出到Excel</Button>
           </Space>
         }
         rowSelection={{
@@ -128,4 +144,4 @@ const Rooms: React.FC = () => {
   );
 };
 
-export default Rooms;
+export default Infrastructure;

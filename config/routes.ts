@@ -36,6 +36,11 @@ export default [
       },
       {
         path: '/roomAndCabinet',
+        exact: true,
+        redirect: '/roomAndCabinet/rooms',
+      },
+      {
+        path: '/roomAndCabinet',
         routes: [
           {
             path: '/roomAndCabinet/rooms',
@@ -47,7 +52,23 @@ export default [
             exact: true,
             component: './room-and-cabinet/Cabinets',
           },
+          { component: '@/pages/404' },
         ],
+      },
+      {
+        path: '/rackEquipment',
+        exact: true,
+        component: './RackEquipment',
+      },
+      {
+        path: '/spareParts',
+        exact: true,
+        component: './SpareParts',
+      },
+      {
+        path: '/infrastructure',
+        exact: true,
+        component: './Infrastructure',
       },
       { component: '@/pages/404' },
     ],

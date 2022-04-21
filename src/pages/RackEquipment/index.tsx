@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Button, Divider, Space } from 'antd';
+import { Button, Divider, Select, Space } from 'antd';
 import EditDrawer from './components/EditDrawer';
 // import styles from './index.less';
 
@@ -13,17 +13,17 @@ interface DataType {
 const originData: DataType[] = [
   {
     id: '1',
-    name: '机房1',
+    name: '设备1',
     time: '2022-03-15 12:00',
   },
   {
     id: '2',
-    name: '机房2',
+    name: '设备2',
     time: '2022-03-15 13:00',
   },
 ];
 
-const Rooms: React.FC = () => {
+const RackEquipment: React.FC = () => {
   const ref = useRef<ActionType>();
   const [editDrawerData, setEditDrawerData] = useState<{ visible: boolean, data?: any }>({ visible: false });
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -33,21 +33,30 @@ const Rooms: React.FC = () => {
       title: '序号',
       dataIndex: 'id',
       search: false,
-      // hideInForm: true,
     },
     {
-      title: '机房名称',
+      title: '资产编号',
+      dataIndex: 'uid',
+    },
+    {
+      title: '设备名称',
       dataIndex: 'name',
     },
     {
-      title: '所在区域',
-      dataIndex: 'address',
+      title: '资产分类',
+      dataIndex: 'classification',
     },
     {
-      title: '最后更新',
-      dataIndex: 'time',
-      valueType: 'dateTime',
-      search: false,
+      title: '资产状态',
+      dataIndex: 'state',
+      renderFormItem: () => {
+        return (
+          <Select placeholder='请选择'>
+            <Select.Option value={1}>部署</Select.Option>
+            <Select.Option value={2}>库存</Select.Option>
+          </Select>
+        );
+      },
     },
     {
       title: '操作',
@@ -96,8 +105,10 @@ const Rooms: React.FC = () => {
         request={fetchData}
         headerTitle={
           <Space>
-            <Button type='primary'>添加机房</Button>
+            <Button type='primary'>添加设备</Button>
             <Button>批量删除</Button>
+            <Button>打印二维码</Button>
+            <Button>导出到Excel</Button>
           </Space>
         }
         rowSelection={{
@@ -128,4 +139,4 @@ const Rooms: React.FC = () => {
   );
 };
 
-export default Rooms;
+export default RackEquipment;

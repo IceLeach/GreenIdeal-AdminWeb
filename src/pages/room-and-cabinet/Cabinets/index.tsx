@@ -1,6 +1,7 @@
+import React, { useRef, useState } from 'react';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Divider, Space } from 'antd';
-import React, { useRef, useState } from 'react';
+import EditDrawer from './components/EditDrawer';
 // import styles from './index.less';
 
 interface DataType {
@@ -123,6 +124,11 @@ const Cabinets: React.FC = () => {
           collapseRender: () => <></>,
           span: 6,
         }}
+      />
+      <EditDrawer
+        visible={editDrawerData.visible}
+        onClose={() => setEditDrawerData({ visible: false })}
+        data={editDrawerData.data}
       />
     </>
   );
