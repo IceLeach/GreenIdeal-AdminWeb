@@ -38,7 +38,7 @@ const BasicLayout = (props: any) => {
             {dom}
           </Link>
         )}
-        title="管理后台"
+        title="数据中心基础设施管理平台（DCIM）V1.0"
         logo={logo}
         // rightContentRender={() => <div className='EE'>rightContentRender</div>}
         footerRender={() => <DefaultFooter className={styles.footer} links={[]} copyright="copyright" />}

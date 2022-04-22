@@ -43,7 +43,7 @@ export default {
             exact: true,
             name: '机柜管理',
             icon: IconMap.userSet,
-          }
+          },
         ],
       },
       {
@@ -63,6 +63,31 @@ export default {
         exact: true,
         name: '基础设施',
         icon: IconMap.userSet,
+      },
+      {
+        path: '/assetInventory',
+        name: '资产盘点',
+        icon: IconMap.userSet,
+        routes: [
+          {
+            path: '/assetInventory/toDoInventory',
+            exact: true,
+            name: '待办盘点',
+            icon: IconMap.userSet,
+          },
+          {
+            path: '/assetInventory/inventoryRecord',
+            exact: true,
+            name: '盘点记录',
+            icon: IconMap.userSet,
+          },
+          {
+            path: '/assetInventory/inventoryPlan',
+            exact: true,
+            name: '盘点计划',
+            icon: IconMap.userSet,
+          },
+        ],
       },
       // {
       //   path: '/page2',

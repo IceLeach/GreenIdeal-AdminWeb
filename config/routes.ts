@@ -70,6 +70,32 @@ export default [
         exact: true,
         component: './Infrastructure',
       },
+      {
+        path: '/assetInventory',
+        exact: true,
+        redirect: '/assetInventory/toDoInventory',
+      },
+      {
+        path: '/assetInventory',
+        routes: [
+          {
+            path: '/assetInventory/toDoInventory',
+            exact: true,
+            component: './assetInventory/ToDoInventory',
+          },
+          {
+            path: '/assetInventory/inventoryRecord',
+            exact: true,
+            component: './assetInventory/InventoryRecord',
+          },
+          {
+            path: '/assetInventory/inventoryPlan',
+            exact: true,
+            component: './assetInventory/InventoryPlan',
+          },
+          { component: '@/pages/404' },
+        ],
+      },
       { component: '@/pages/404' },
     ],
   },
