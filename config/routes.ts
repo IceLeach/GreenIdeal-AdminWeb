@@ -96,6 +96,11 @@ export default [
           { component: '@/pages/404' },
         ],
       },
+      {
+        path: '/changeManagement',
+        exact: true,
+        component: './ChangeManagement',
+      },
       { component: '@/pages/404' },
     ],
   },

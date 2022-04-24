@@ -13,13 +13,25 @@
       }
     }
   }
-  .upload{
-    :global{
-      .ant-upload-list-item-actions>a{
-        display: none;
-      }
+  .row{
+    display: flex;
+    align-items: center;
+    .first{
+      width: 50%;
+      padding-right: 8px;
+    }
+    .second{
+      width: 50%;
+      padding-left: 8px;
     }
   }
+  // .upload{
+  //   :global{
+  //     .ant-upload-list-item-actions>a{
+  //       display: none;
+  //     }
+  //   }
+  // }
   :global{
     .ant-drawer-wrapper-body .ant-drawer-body{
       padding-top: 0;

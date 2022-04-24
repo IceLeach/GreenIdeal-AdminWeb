@@ -89,6 +89,12 @@ export default {
           },
         ],
       },
+      {
+        path: '/changeManagement',
+        exact: true,
+        name: '变更管理',
+        icon: IconMap.userSet,
+      },
       // {
       //   path: '/page2',
       //   name: 'mxgraph',
