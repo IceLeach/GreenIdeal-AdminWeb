@@ -2,12 +2,24 @@ import React from 'react';
 import ProLayout, { DefaultFooter, PageContainer } from '@ant-design/pro-layout';
 import { history, Link } from 'umi';
 import defaultProps from './defaultProps';
+// import {
+//   HomeOutlined,
+//   HistoryOutlined,
+//   SettingOutlined,
+// } from '@ant-design/icons';
 import styles from './BasicLayout.less';
 
+
+// const IconMap: any = {
+//   home: <HomeOutlined />,
+//   history: <HistoryOutlined />,
+//   userSet: <SettingOutlined />,
+// };
 const logo =
   'https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ';
 
 const BasicLayout = (props: any) => {
+  // console.log('props', props.route)
   // const [pathname, setPathname] = useState(window.location.pathname ?? '/');
   return (
     <div
@@ -18,6 +30,7 @@ const BasicLayout = (props: any) => {
     >
       <ProLayout
         {...defaultProps}
+        // {...props}
         layout='mix'
         breadcrumbRender={false}
         // location={{ pathname }}
@@ -35,6 +48,7 @@ const BasicLayout = (props: any) => {
           //   setPathname(item.path ?? '/');
           // }}
           >
+            {/* {item.menuIcon && IconMap[item.menuIcon]} */}
             {dom}
           </Link>
         )}
@@ -42,6 +56,7 @@ const BasicLayout = (props: any) => {
         logo={logo}
         // rightContentRender={() => <div className='EE'>rightContentRender</div>}
         footerRender={() => <DefaultFooter className={styles.footer} links={[]} copyright="copyright" />}
+      // {...props}
       >
         <PageContainer>{props.children}</PageContainer>
       </ProLayout>

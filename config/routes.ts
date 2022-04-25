@@ -18,6 +18,8 @@ export default [
         path: '/dashboard',
         exact: true,
         component: './home/dashboard',
+        // name: '欢迎',
+        // icon: 'home',
       },
       {
         path: '/page1',
@@ -100,6 +102,7 @@ export default [
         path: '/changeManagement',
         exact: true,
         component: './ChangeManagement',
+        // access: 'canReadFoo',
       },
       { component: '@/pages/404' },
     ],

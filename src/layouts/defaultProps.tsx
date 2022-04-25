@@ -13,7 +13,6 @@ const IconMap = {
 export default {
   route: {
     path: '/',
-    name: 'Blanc',
     routes: [
       {
         path: '/dashboard',
