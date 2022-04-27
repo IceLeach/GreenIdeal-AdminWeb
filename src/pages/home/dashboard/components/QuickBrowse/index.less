@@ -1,0 +1,38 @@
+.quickBrowse {
+  display: flex;
+  margin-bottom: 18px;
+  // flex-wrap: wrap;
+  .quickBrowseItem:not(:last-child) {
+    margin-right: 32px;
+  }
+  .quickBrowseItem {
+    width: 290px;
+    height: 110px;
+    background: #283460;
+    box-shadow: 0px 2px 17px -7px #0c1229;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+    .itemIcon {
+      width: 95px;
+      height: 86px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .itemContent {
+      margin-left: 35px;
+      color: #fff;
+      font-size: 20px;
+      .name,
+      .number {
+        height: 50%;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}

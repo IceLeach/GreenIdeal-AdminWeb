@@ -1,22 +1,39 @@
-import React from 'react';
-import ProLayout, { DefaultFooter, PageContainer } from '@ant-design/pro-layout';
+import React, { useState } from 'react';
+import ProLayout, {
+  DefaultFooter,
+  PageContainer,
+} from '@ant-design/pro-layout';
 import { history, Link } from 'umi';
+import { Avatar } from 'antd';
+import {
+  BellOutlined,
+  QuestionCircleOutlined,
+  SearchOutlined,
+  // HomeOutlined,
+  // HistoryOutlined,
+  // SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import defaultProps from './defaultProps';
-// import {
-//   HomeOutlined,
-//   HistoryOutlined,
-//   SettingOutlined,
-// } from '@ant-design/icons';
+import logo from '@/assets/logo.png';
+import headerImg from '@/assets/headerImg.png';
+import message from '@/assets/message.svg';
 import styles from './BasicLayout.less';
-
 
 // const IconMap: any = {
 //   home: <HomeOutlined />,
 //   history: <HistoryOutlined />,
 //   userSet: <SettingOutlined />,
 // };
-const logo =
-  'https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ';
+
+const title: any = (
+  <div className={styles.headerTitle}>
+    <div className={styles.mainTitle}>浙江绿色理想科技有限公司</div>
+    <div className={styles.subTitle}>
+      Zhejiang Green Ideal Technology Co.,Ltd.
+    </div>
+  </div>
+);
 
 const BasicLayout = (props: any) => {
   // console.log('props', props.route)
@@ -31,7 +48,8 @@ const BasicLayout = (props: any) => {
       <ProLayout
         {...defaultProps}
         // {...props}
-        layout='mix'
+        layout="mix"
+        className={styles.layout}
         breadcrumbRender={false}
         // location={{ pathname }}
         location={props.location}
@@ -44,21 +62,48 @@ const BasicLayout = (props: any) => {
         menuItemRender={(item: any, dom) => (
           <Link
             to={item.path ?? '/'}
-          // onClick={() => {
-          //   setPathname(item.path ?? '/');
-          // }}
+            // onClick={() => {
+            //   setPathname(item.path ?? '/');
+            // }}
           >
             {/* {item.menuIcon && IconMap[item.menuIcon]} */}
             {dom}
           </Link>
         )}
-        title="数据中心基础设施管理平台（DCIM）V1.0"
+        title={title}
         logo={logo}
-        // rightContentRender={() => <div className='EE'>rightContentRender</div>}
-        footerRender={() => <DefaultFooter className={styles.footer} links={[]} copyright="copyright" />}
-      // {...props}
+        siderWidth={279}
+        collapsed={false}
+        // collapsedButtonRender={() => <></>}
+        rightContentRender={() => (
+          <div className={styles.rightContent}>
+            <img src={headerImg} />
+            <div className={styles.toolBar}>
+              <div className={styles.iconButton}>
+                <SearchOutlined />
+              </div>
+              <div className={styles.iconButton}>
+                <img src={message} />
+              </div>
+              <div className={styles.iconButton}>
+                <QuestionCircleOutlined />
+              </div>
+              <div className={styles.iconButton}>
+                <BellOutlined />
+              </div>
+              <div className={styles.userAvatar}>
+                <Avatar size={36} icon={<UserOutlined />} />
+                <span className={styles.name}>用户名</span>
+              </div>
+            </div>
+          </div>
+        )}
+        // footerRender={() => <DefaultFooter className={styles.footer} links={[]} copyright="copyright" />}
+        footerRender={() => false}
+        // {...props}
       >
-        <PageContainer>{props.children}</PageContainer>
+        {props.children}
+        {/* <PageContainer>{props.children}</PageContainer> */}
       </ProLayout>
     </div>
   );

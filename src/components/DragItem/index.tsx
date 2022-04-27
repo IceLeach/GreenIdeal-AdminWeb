@@ -1,17 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDrop, useDrag } from 'ahooks';
 
-const DragItem = ({ data }: any) => {
+interface DragItemProps {
+  itemKey: string;
+  data: any;
+  onDragChange: (key: string, dragging: boolean) => void;
+}
+
+const DragItem = (props: DragItemProps) => {
+  const { itemKey, data, onDragChange } = props;
   const dragRef = useRef(null);
 
   const [dragging, setDragging] = useState(false);
 
-  useDrag({ data }, dragRef, {
+  useDrag(data, dragRef, {
     onDragStart: () => {
       setDragging(true);
+      onDragChange(itemKey, true);
     },
     onDragEnd: () => {
       setDragging(false);
+      onDragChange(itemKey, false);
     },
   });
 
@@ -26,7 +35,7 @@ const DragItem = ({ data }: any) => {
         marginRight: 16,
       }}
     >
-      {dragging ? 'dragging' : `box-${data}`}
+      {dragging ? 'dragging' : `box-${data.data}`}
     </div>
   );
 };
@@ -41,11 +50,11 @@ const DropItem = () => {
     },
     onDragEnter: (e) => {
       setIsHovering(true);
-      console.log('enter', e)
+      console.log('enter', e);
     },
     onDragLeave: (e) => {
       setIsHovering(false);
-      console.log('leave', e)
+      console.log('leave', e);
     },
     // onDragOver: (e) => {
     //   console.log('over', e)
@@ -53,13 +62,22 @@ const DropItem = () => {
   });
 
   return (
-    <div ref={dropRef} style={{ display: 'inline-block', height: 32, width: 'calc(100% / 24)', border: '1px solid #e8e8e8', background: isHovering ? 'green' : '#fff' }}></div>
+    <div
+      ref={dropRef}
+      style={{
+        display: 'inline-block',
+        height: 32,
+        width: 'calc(100% / 24)',
+        border: '1px solid #e8e8e8',
+        background: isHovering ? 'green' : '#fff',
+      }}
+    ></div>
   );
-}
+};
 
 export default () => {
-  const [isHovering, setIsHovering] = useState(false);
   const [items, setItems] = useState<string[]>([]);
+  const [draggingItem, setDraggingItem] = useState<string | null>(null);
 
   useEffect(() => {
     const itemList: string[] = [];
@@ -69,41 +87,44 @@ export default () => {
     setItems(itemList);
   }, []);
 
-
-  const dropRef = useRef(null);
-
-  useDrop(dropRef, {
-    onDom: (content: string, e) => {
-      // alert(`custom: ${content} dropped`);
-      console.log(content, e);
-    },
-    onDragEnter: (e) => {
-      setIsHovering(true);
-      console.log('enter', e)
-    },
-    onDragLeave: (e) => {
-      setIsHovering(false);
-      console.log('leave', e)
-    },
-    // onDragOver: (e) => {
-    //   console.log('over', e)
-    // }
-  });
+  useEffect(() => {
+    console.log('draggingItem', draggingItem);
+  }, [draggingItem]);
 
   return (
     <div style={{ background: '#fff' }}>
-      <div ref={dropRef} style={{ border: '1px dashed #e8e8e8', padding: 4, textAlign: 'center' }}>
+      <div
+        style={{
+          border: '1px dashed #e8e8e8',
+          padding: 4,
+          textAlign: 'center',
+        }}
+      >
         {/* {isHovering ? 'release here' : 'drop here'} */}
-        {/* <div></div> */}
-        {items.map(item => (
+        {items.map((item) => (
           <DropItem key={item} />
           // <div key={item} style={{ display: 'inline-block', height: 32, width: 'calc(100% / 24)', border: '1px solid #e8e8e8' }}></div>
         ))}
       </div>
 
       <div style={{ display: 'flex', marginTop: 8 }}>
-        {['1', '2', '3', '4', '5'].map((e, i) => (
-          <DragItem key={e} data={e} />
+        {[
+          { key: '1', data: { data: 1, size: 1 } },
+          { key: '2', data: { data: 2, size: 2 } },
+          { key: '3', data: { data: 2, size: 3 } },
+        ].map((e) => (
+          <DragItem
+            key={e.key}
+            itemKey={e.key}
+            data={e.data}
+            onDragChange={(key, draging) => {
+              if (draging) {
+                setDraggingItem(key);
+              } else {
+                setDraggingItem(null);
+              }
+            }}
+          />
         ))}
       </div>
     </div>

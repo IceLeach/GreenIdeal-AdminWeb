@@ -1,6 +1,144 @@
-.footer{
-  :global{
-    .ant-pro-global-footer{
+.layout {
+  .headerTitle {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .mainTitle {
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 24px;
+    }
+    .subTitle {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 16px;
+    }
+  }
+  .rightContent {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    > img {
+      position: absolute;
+      left: 50px;
+    }
+    .toolBar {
+      padding-right: 106px;
+      display: flex;
+      align-items: center;
+      z-index: 2;
+      .iconButton {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin: 0 19px;
+        img {
+          height: 20px;
+        }
+        :global {
+          .anticon {
+            font-size: 20px;
+          }
+        }
+      }
+      .userAvatar {
+        margin-left: 23px;
+        .name {
+          color: #fff;
+          margin-left: 14px;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  :global {
+    .ant-layout-sider {
+      padding-top: 80px !important;
+      background: linear-gradient(180deg, #111c36 0%, #213b79 100%);
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      .ant-layout-sider-children {
+        .ant-menu.ant-menu-root > .ant-menu-item:first-child {
+          margin-top: 8px;
+        }
+        .ant-menu.ant-menu-root > .ant-menu-item,
+        .ant-menu.ant-menu-root > .ant-menu-submenu > .ant-menu-submenu-title {
+          padding-left: 26px !important;
+          .ant-pro-menu-item-title {
+            font-size: 18px;
+            font-weight: 400;
+            margin-left: 24px;
+          }
+        }
+        .ant-menu {
+          .ant-menu-item,
+          .ant-menu-submenu-title {
+            height: 55px;
+            margin: 0;
+          }
+        }
+        .ant-menu.ant-menu-sub > .ant-menu-item {
+          padding-left: 69px !important;
+        }
+      }
+      .ant-pro-sider-collapsed-button {
+        display: none;
+      }
+      .ant-menu.ant-menu-sub {
+        background: transparent;
+        .ant-pro-menu-item-title {
+          font-size: 18px;
+          font-weight: 400;
+        }
+      }
+      .ant-pro-menu-item > .anticon {
+        font-size: 16px;
+      }
+    }
+    .ant-layout > .ant-layout-header:first-child {
+      height: 80px !important;
+    }
+    .ant-layout-header.ant-pro-fixed-header {
+      height: 80px !important;
+      .ant-pro-global-header {
+        padding-left: 64px;
+        background: radial-gradient(
+          77.06% 44385% at 4.69% 100%,
+          #132141 10.42%,
+          #203974 45.83%,
+          #111d38 82.81%
+        );
+        .ant-pro-global-header-logo {
+          // width: 374px;
+          flex-shrink: 0;
+        }
+        .ant-pro-global-header-logo > a > h1 {
+          height: 100%;
+        }
+      }
+    }
+    .ant-layout.ant-layout-has-sider > .ant-layout {
+      background: linear-gradient(180deg, #0f1e35 -10.87%, #1d397a 100%);
+      .ant-layout-footer {
+        background: transparent;
+      }
+    }
+    .ant-layout > .ant-pro-basicLayout-content {
+      margin-right: 0;
+      margin-bottom: 0;
+      padding-bottom: 24px;
+      max-height: calc(100vh - 104px);
+      overflow: auto;
+    }
+  }
+}
+.footer {
+  :global {
+    .ant-pro-global-footer {
       margin: 24px 0;
     }
   }
