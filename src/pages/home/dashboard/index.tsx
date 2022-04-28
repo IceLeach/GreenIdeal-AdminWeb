@@ -4,6 +4,8 @@ import React from 'react';
 import QuickBrowse from './components/QuickBrowse';
 import ToDoList from './components/ToDoList';
 import MessageBox from './components/MessageBox';
+import QuickAccess from './components/QuickAccess';
+import RemindBox from './components/RemindBox';
 import styles from './index.less';
 
 const Dashboard: React.FC = () => {
@@ -11,7 +13,7 @@ const Dashboard: React.FC = () => {
   // console.log('access', access)
 
   return (
-    <>
+    <div className={styles.dashboard}>
       {/* <div style={{ textAlign: 'center', fontSize: 24, fontWeight: 'bold' }}>
         欢迎使用系统
         <div>
@@ -24,9 +26,13 @@ const Dashboard: React.FC = () => {
           <ToDoList />
           <MessageBox />
         </div>
+        <div className={styles.rightBox}>
+          <QuickAccess />
+          <RemindBox />
+        </div>
         <div></div>
       </div>
-    </>
+    </div>
   );
 };
 

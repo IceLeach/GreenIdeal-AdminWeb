@@ -2,11 +2,13 @@
   display: flex;
   margin-bottom: 18px;
   // flex-wrap: wrap;
+  min-width: 1000px;
   .quickBrowseItem:not(:last-child) {
     margin-right: 32px;
   }
   .quickBrowseItem {
     width: 290px;
+    min-width: 242px;
     height: 110px;
     background: #283460;
     box-shadow: 0px 2px 17px -7px #0c1229;
@@ -14,7 +16,7 @@
     padding: 12px 16px;
     display: flex;
     margin-bottom: 8px;
-    flex-shrink: 0;
+    flex-shrink: 1;
     .itemIcon {
       width: 95px;
       height: 86px;

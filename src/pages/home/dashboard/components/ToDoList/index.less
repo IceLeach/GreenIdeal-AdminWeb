@@ -1,6 +1,7 @@
 .box {
-  width: 776px;
   height: 395px;
+  min-height: 200px;
+  flex-shrink: 1;
   padding: 32px 63px 32px;
   background: #303e75;
   box-shadow: 0px 2px 26px -4px #0c1229;
@@ -15,5 +16,8 @@
       line-height: 32px;
       margin-left: 26px;
     }
+  }
+  .content {
+    height: calc(100% - 32px);
   }
 }

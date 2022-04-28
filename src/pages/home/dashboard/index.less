@@ -1,8 +1,23 @@
+.dashboard {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .boxList {
   display: flex;
   height: calc(100% - 136px);
+  min-height: 416px;
   .leftBox {
     display: flex;
     flex-direction: column;
+    margin-right: 26px;
+    width: 776px;
+    min-width: 500px;
+  }
+  .rightBox {
+    display: flex;
+    flex-direction: column;
+    width: 776px;
+    min-width: 500px;
   }
 }
