@@ -99,6 +99,17 @@ export default [
         ],
       },
       {
+        path: '/capacityManagement',
+        routes: [
+          {
+            path: '/capacityManagement/capacityPlanning',
+            exact: true,
+            component: './capacityManagement/CapacityPlanning',
+          },
+          { component: '@/pages/404' },
+        ],
+      },
+      {
         path: '/changeManagement',
         exact: true,
         component: './ChangeManagement',

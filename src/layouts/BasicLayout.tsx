@@ -14,11 +14,12 @@ import {
   // SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import defaultProps from './defaultProps';
 import logo from '@/assets/logo.png';
 import headerImg from '@/assets/headerImg.png';
 import message from '@/assets/message.svg';
 import styles from './BasicLayout.less';
+// 临时方案 后续会直接读config/routes
+import defaultProps from './defaultProps';
 
 // const IconMap: any = {
 //   home: <HomeOutlined />,

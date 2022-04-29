@@ -18,7 +18,7 @@ export default {
         path: '/dashboard',
         exact: true,
         name: '欢迎',
-        icon: IconMap.home
+        icon: IconMap.home,
       },
       {
         path: '/page1',
@@ -93,6 +93,19 @@ export default {
         exact: true,
         name: '变更管理',
         icon: IconMap.userSet,
+      },
+      {
+        path: '/capacityManagement',
+        name: '容量管理',
+        icon: IconMap.userSet,
+        routes: [
+          {
+            path: '/capacityManagement/capacityPlanning',
+            exact: true,
+            name: '容量规划',
+            icon: IconMap.userSet,
+          },
+        ],
       },
       // {
       //   path: '/page2',
