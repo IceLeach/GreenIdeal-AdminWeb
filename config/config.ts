@@ -1,5 +1,7 @@
 import { defineConfig } from 'umi';
 import routes from './routes';
+import theme from './theme';
+
 export default defineConfig({
   hash: true,
   title: false,
@@ -11,6 +13,7 @@ export default defineConfig({
   },
   antd: {},
   routes: routes,
+  theme: theme,
   //define: {},
   nodeModulesTransform: {
     type: 'none',

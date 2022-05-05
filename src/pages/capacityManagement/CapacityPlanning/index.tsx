@@ -55,9 +55,9 @@ const treeData = [
   },
 ];
 const dragList = [
-  { key: '1', data: { name: '交换机', data: 1, size: 1 } },
-  { key: '2', data: { name: '服务器1', data: 2, size: 2 } },
-  { key: '3', data: { name: '服务器2', data: 3, size: 3 } },
+  { key: '1', data: { name: '交换机', data: 1, size: 1, color: 'red' } },
+  { key: '2', data: { name: '服务器1', data: 2, size: 2, color: 'green' } },
+  { key: '3', data: { name: '服务器2', data: 3, size: 3, color: 'blue' } },
 ];
 const containerSize = 36;
 

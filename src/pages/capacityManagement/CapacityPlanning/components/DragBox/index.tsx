@@ -7,6 +7,7 @@ export interface DragBoxItemType {
     name: string;
     data: any;
     size: number;
+    color: string;
   };
 }
 interface DragBoxProps {

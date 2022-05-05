@@ -1,3 +1,4 @@
+import { MenuOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { DragBoxItemType } from '../DragBox';
 import DragItem from '../DragItem';
@@ -13,10 +14,22 @@ const DropContainer: React.FC<DropContainerProps> = (props) => {
   const { containerSize, draggingItem, setDraggingItem } = props;
   const [hoveringKey, setHoveringKey] = useState<number | null>(null);
   const [activeKeys, setActiveKeys] = useState<number[]>([]);
+  const [components, setComponents] = useState<
+    {
+      key: string;
+      component: DragBoxItemType;
+      startIndex: number;
+      length: number;
+    }[]
+  >([]);
   const [itemDataList, setItemDataList] = useState<
     {
       key: number;
-      component: { value: DragBoxItemType; isStart: boolean } | null;
+      component: {
+        key: string;
+        value: DragBoxItemType;
+        isStart: boolean;
+      } | null;
     }[]
   >([]);
 
@@ -29,7 +42,7 @@ const DropContainer: React.FC<DropContainerProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log('hoveringKey', hoveringKey);
+    // console.log('hoveringKey', hoveringKey);
     if (draggingItem) {
       const size = draggingItem.data.size;
       if (
@@ -57,15 +70,34 @@ const DropContainer: React.FC<DropContainerProps> = (props) => {
       if (key + size - 1 <= containerSize) {
         let isOk = true;
         for (let i = key - 1; i <= key + size - 2; i += 1) {
-          if (itemDataList[i].component) {
+          if (
+            itemDataList[i].component &&
+            itemDataList[i].component?.key !== draggingItem.key
+          ) {
             isOk = false;
             break;
           }
         }
         if (isOk) {
+          const newComponents = [...components].filter(
+            (c) => c.key !== draggingItem.key,
+          );
+          newComponents.push({
+            key: draggingItem.key,
+            component: draggingItem,
+            startIndex: key,
+            length: draggingItem.data.size,
+          });
+          setComponents(newComponents);
           const newItemDataList = [...itemDataList];
+          for (let i = 0; i < newItemDataList.length; i += 1) {
+            if (newItemDataList[i].component?.key === draggingItem.key) {
+              newItemDataList[i].component = null;
+            }
+          }
           for (let i = key - 1; i <= key + size - 2; i += 1) {
             newItemDataList[i].component = {
+              key: draggingItem.key,
               value: draggingItem,
               isStart: i === key - 1,
             };
@@ -86,65 +118,57 @@ const DropContainer: React.FC<DropContainerProps> = (props) => {
       }}
     >
       <div style={{ border: '1px solid #000' }}>
-        {itemDataList.map((item) =>
-          item.component ? (
-            item.component.isStart ? (
-              // <DragItem
-              //   key={item.component.value.key}
-              //   itemKey={item.component.value.key}
-              //   data={item.component.value.data}
-              //   label={item.component.value.data.name}
-              //   onDragChange={(key, draging) => {
-              //     if (draging) {
-              //       setDraggingItem(item.component!.value);
-              //       const newItemDataList = [...itemDataList];
-              //       const currentKey = item.key;
-              //       const currentSize = item.component!.value.data.size;
-              //       for (let i = currentKey - 1; i <= currentKey + currentSize - 2; i += 1) {
-              //         newItemDataList[i].component = null;
-              //       }
-              //       setItemDataList(newItemDataList);
-              //     } else {
-              //       setDraggingItem(null);
-              //     }
-              //   }}
-              // />
-              <div
-                key={`${item.key}`}
-                style={{
-                  height: 16,
-                  border: '1px solid #e8e8e8',
-                }}
-              >
-                {item.component.value.data.name}
-              </div>
-            ) : (
-              <div
-                key={`${item.key}`}
-                style={{
-                  height: 16,
-                  border: '1px solid #e8e8e8',
-                }}
-              >
-                {item.component.value.data.name}
-              </div>
-            )
-          ) : (
-            <DropItem
-              key={`${item.key}`}
-              itemKey={item.key}
-              hasComponent={!!item.component}
-              isHovering={!!activeKeys.find((key) => key === item.key)}
-              onDrop={dropItem}
-              onHovering={(key) => {
-                if (key !== hoveringKey) {
-                  setHoveringKey(key);
-                }
-              }}
-              onLeave={(key) => setHoveringKey(null)}
-            />
-          ),
-        )}
+        {itemDataList.map((item) => (
+          <DropItem
+            key={`${item.key}`}
+            itemKey={item.key}
+            hasComponent={!!item.component}
+            componentColor={item.component?.value.data.color}
+            isHovering={!!activeKeys.find((key) => key === item.key)}
+            hoveringColor={draggingItem?.data.color}
+            onDrop={dropItem}
+            onHovering={(key) => {
+              if (key !== hoveringKey) {
+                setHoveringKey(key);
+              }
+            }}
+            onLeave={(key) => setHoveringKey(null)}
+            componentIsDraging={
+              !!item.component && item.component?.key === draggingItem?.key
+            }
+          />
+        ))}
+      </div>
+      <div style={{ position: 'absolute', top: 8 }}>
+        {components.map((c) => (
+          <DragItem
+            key={c.component.key}
+            itemKey={c.component.key}
+            data={c.component.data}
+            label=""
+            // label={<MenuOutlined style={{ cursor: 'grab', color: '#000', position: 'absolute', left: 160 }} />}
+            transparentWhenDragging
+            hiddenOriginWhenDragging
+            onDragChange={(key, draging) => {
+              if (draging) {
+                setDraggingItem(c.component);
+              } else {
+                setDraggingItem(null);
+              }
+            }}
+            // style={{ position: 'absolute', top: (c.startIndex - 1) * 16 + 2, left: 1, height: c.length * 16, width: 0, border: 'none', padding: 0, display: 'flex', alignItems: 'center' }}
+            style={{
+              position: 'absolute',
+              top: (c.startIndex - 1) * 16 + 2,
+              left: 1,
+              height: c.length * 16,
+              width: 180,
+              border: 'none',
+              padding: 0,
+            }}
+          />
+          // <div style={{ position: 'absolute', top: (c.startIndex - 1) * 16 + 2, left: 1, height: c.length * 16, width: 180 }} />
+        ))}
       </div>
     </div>
   );
