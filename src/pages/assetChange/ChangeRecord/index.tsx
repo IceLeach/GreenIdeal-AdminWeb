@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { DatePicker, Divider } from 'antd';
+import { Button, DatePicker, Space } from 'antd';
+import EditDrawer from './components/EditDrawer';
 // import styles from './index.less';
 
 interface DataType {
   id: string;
+  uid: string;
   name: string;
   time: string;
 }
@@ -12,23 +14,24 @@ interface DataType {
 const originData: DataType[] = [
   {
     id: '1',
-    name: '任务1',
+    uid: '100000',
+    name: '申请人1',
     time: '2022-03-15 12:00',
   },
   {
     id: '2',
-    name: '任务2',
+    uid: '100001',
+    name: '申请人2',
     time: '2022-03-15 13:00',
   },
 ];
 
-const ToDoInventory: React.FC = () => {
+const ChangeRecord: React.FC = () => {
   const ref = useRef<ActionType>();
   const [editDrawerData, setEditDrawerData] = useState<{
     visible: boolean;
     data?: any;
   }>({ visible: false });
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   const columns: ProColumns<DataType>[] = [
     {
@@ -37,11 +40,22 @@ const ToDoInventory: React.FC = () => {
       search: false,
     },
     {
-      title: '任务名称',
+      title: '单号',
+      dataIndex: 'uid',
+      render: (_, record) => (
+        <>
+          <a onClick={() => setEditDrawerData({ visible: true, data: record })}>
+            {record.uid}
+          </a>
+        </>
+      ),
+    },
+    {
+      title: '申请人',
       dataIndex: 'name',
     },
     {
-      title: '完成时间',
+      title: '申请时间',
       dataIndex: 'time',
       renderFormItem: () => {
         return (
@@ -54,35 +68,17 @@ const ToDoInventory: React.FC = () => {
       },
     },
     {
-      title: '入库数量',
-      dataIndex: 'count',
+      title: '变更级别',
+      dataIndex: 'level',
+    },
+    {
+      title: '当前处理人',
+      dataIndex: 'processor',
       search: false,
     },
     {
-      title: '盘盈',
-      dataIndex: 'surplusCount',
-      search: false,
-    },
-    {
-      title: '盘亏',
-      dataIndex: 'lossCount',
-      search: false,
-    },
-    {
-      title: '成功率',
-      dataIndex: 'successRate',
-      search: false,
-    },
-    {
-      title: '操作',
-      valueType: 'option',
-      render: (_, record) => (
-        <>
-          <a onClick={() => setEditDrawerData({ visible: true, data: record })}>
-            查看
-          </a>
-        </>
-      ),
+      title: '状态',
+      dataIndex: 'state',
     },
   ];
 
@@ -112,12 +108,11 @@ const ToDoInventory: React.FC = () => {
       <ProTable
         columns={columns}
         request={fetchData}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: (keys: any) => {
-            setSelectedRowKeys(keys);
-          },
-        }}
+        headerTitle={
+          <Space>
+            <Button type="primary">添加申请</Button>
+          </Space>
+        }
         pagination={{
           pageSize: 20,
           size: 'default',
@@ -131,8 +126,13 @@ const ToDoInventory: React.FC = () => {
           span: 6,
         }}
       />
+      <EditDrawer
+        visible={editDrawerData.visible}
+        onClose={() => setEditDrawerData({ visible: false })}
+        data={editDrawerData.data}
+      />
     </>
   );
 };
 
-export default ToDoInventory;
+export default ChangeRecord;

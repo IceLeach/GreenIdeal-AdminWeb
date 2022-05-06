@@ -1,121 +1,156 @@
 export default [
   {
-    path: '/404',
-    exact: true,
-    component: './404',
-  },
-  {
     path: '/',
-    exact: true,
     redirect: '/dashboard',
   },
   {
     path: '/',
     component: '../layouts/BasicLayout',
-    // redirect: '/dashboard',
     routes: [
       {
         path: '/dashboard',
-        exact: true,
         component: './home/dashboard',
-        // name: '欢迎',
-        // icon: 'home',
+        name: '欢迎',
+        icon: 'home',
       },
       {
         path: '/page1',
         exact: true,
         component: './home/page1',
+        name: '展示页',
+        icon: 'history',
       },
       {
-        path: '/page2',
-        exact: true,
-        component: './home/page2',
+        path: '/assetManagement',
+        redirect: '/assetManagement/rooms',
       },
       {
-        path: '/page3',
-        exact: true,
-        component: './home/page3',
-      },
-      {
-        path: '/roomAndCabinet',
-        exact: true,
-        redirect: '/roomAndCabinet/rooms',
-      },
-      {
-        path: '/roomAndCabinet',
+        path: '/assetManagement',
+        name: '资产管理',
+        icon: 'setting',
         routes: [
           {
-            path: '/roomAndCabinet/rooms',
-            exact: true,
-            component: './room-and-cabinet/Rooms',
+            path: '/assetManagement/rooms',
+            component: './assetManagement/Rooms',
+            name: '机房管理',
           },
           {
-            path: '/roomAndCabinet/cabinets',
-            exact: true,
-            component: './room-and-cabinet/Cabinets',
+            path: '/assetManagement/cabinets',
+            component: './assetManagement/Cabinets',
+            name: '机柜管理',
           },
-          { component: '@/pages/404' },
+          {
+            path: '/assetManagement/rackEquipment',
+            component: './assetManagement/RackEquipment',
+            name: '机架设备',
+          },
+          {
+            path: '/assetManagement/infrastructure',
+            component: './assetManagement/Infrastructure',
+            name: '基础设施',
+          },
+          {
+            path: '/assetManagement/spareParts',
+            component: './assetManagement/SpareParts',
+            name: '配件备件',
+          },
+          { component: './404' },
         ],
       },
       {
-        path: '/rackEquipment',
-        exact: true,
-        component: './RackEquipment',
+        path: '/assetVisualization',
+        redirect: '/assetVisualization/monitorView',
       },
       {
-        path: '/spareParts',
-        exact: true,
-        component: './SpareParts',
-      },
-      {
-        path: '/infrastructure',
-        exact: true,
-        component: './Infrastructure',
+        path: '/assetVisualization',
+        name: '资产可视化',
+        icon: 'setting',
+        routes: [
+          {
+            path: '/assetVisualization/monitorView',
+            // component: '',
+            name: '监视视图',
+          },
+          {
+            path: '/assetVisualization/monitorSetting',
+            // component: '',
+            name: '监视设置',
+          },
+          { component: './404' },
+        ],
       },
       {
         path: '/assetInventory',
-        exact: true,
         redirect: '/assetInventory/toDoInventory',
       },
       {
         path: '/assetInventory',
+        name: '资产盘点',
+        icon: 'setting',
         routes: [
           {
             path: '/assetInventory/toDoInventory',
-            exact: true,
             component: './assetInventory/ToDoInventory',
+            name: '待办盘点',
           },
           {
             path: '/assetInventory/inventoryRecord',
-            exact: true,
             component: './assetInventory/InventoryRecord',
+            name: '盘点记录',
           },
           {
             path: '/assetInventory/inventoryPlan',
-            exact: true,
             component: './assetInventory/InventoryPlan',
+            name: '盘点计划',
           },
-          { component: '@/pages/404' },
+          { component: './404' },
+        ],
+      },
+      {
+        path: '/assetChange',
+        redirect: '/assetChange/changeRecord',
+      },
+      {
+        path: '/assetChange',
+        name: '资产变更',
+        icon: 'setting',
+        routes: [
+          {
+            path: '/assetChange/changeRecord',
+            component: './assetChange/ChangeRecord',
+            name: '变更记录',
+          },
+          {
+            path: '/assetChange/processSetting',
+            // component: '',
+            name: '流程设置',
+          },
+          { component: './404' },
         ],
       },
       {
         path: '/capacityManagement',
+        redirect: '/capacityManagement/capacityPlanning',
+      },
+      {
+        path: '/capacityManagement',
+        name: '容量管理',
+        icon: 'setting',
         routes: [
           {
             path: '/capacityManagement/capacityPlanning',
-            exact: true,
             component: './capacityManagement/CapacityPlanning',
+            name: '容量规划',
           },
-          { component: '@/pages/404' },
+          {
+            path: '/capacityManagement/capacitySetting',
+            // component: '',
+            name: '容量设置',
+          },
+          { component: './404' },
         ],
       },
-      {
-        path: '/changeManagement',
-        exact: true,
-        component: './ChangeManagement',
-        // access: 'canReadFoo',
-      },
-      { component: '@/pages/404' },
+      { component: './404' },
     ],
   },
 ];

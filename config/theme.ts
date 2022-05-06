@@ -1,12 +1,9 @@
-// const colorMap = {
-
-// };
 export default {
-  // antd组件的class名前缀
+  // The prefix to use on all css classes from ant.
   // 'ant-prefix': '',
 
   // theme-color
-  // 'primary-color': ,
+  'primary-color': '#1890FF',
   // 'info-color': ,
   // 'title-color': ,
   // 'success-color': ,
@@ -19,66 +16,34 @@ export default {
   // 'icon-header-color': ,
   // 'dec-color': ,
   // 'bg-color': ,
-  // 'text-color': ,
+  // 'text-color': '#fff',
   // 'remark-color': ,
 
   // Table
-  // 'table-text-color': ,
-  // 'table-head-text-color': ,
-  // 'table-splitline-color': ,
-  // 'table-border-color': ,
-  // 'table-head-bg-color': ,
-  // 'heading-color': , //表头颜色
-
-  // Form
-  // 'form-title-color': ,
-  // 'form-bg-color': ,
-
-  // Modal
-  // 'modal-splitline-color': ,
-  // 'modal-btn-bg-color': ,
-  // 'modal-btn-border-color': ,
-  // 'modal-btn-text-color': ,
-  // 'modal-title-bg-color': ,
-  // 'modal-close-color': ,
-  // 'modal-header-title-font-size': ,
-  // 'modal-header-border-color-split': ,
+  'table-bg': '#303E75',
+  'table-header-bg': '#303E75',
+  'table-row-hover-bg': '#303E75',
+  'table-selected-row-bg': '#303E75',
+  'table-border-color': '#13213D',
 
   // Button
-  'btn-border-radius-base': '6px',
-  // 'btn-padding-horizontal-base': ,
-  // 'btn-border-style': ,
-  // 'btn-border-highlight-color': ,
-  // 'btn-text-color': ,
-  // 'btn-text-highlight-color': ,
-  // 'btn-default-color': ,
-  // 'btn-text-shadow': ,
-  // 'btn-primary-shadow': ,
-  // 'checkbox-selectall-color': ,
-  // 'checkbox-check-disabled-color': ,
-
-  // Tab、菜单、Container外线框样式
-  // 'tab-splitline-color': ,
-  // 'tab-border-color': ,
-  // 'tab-border-highlight-color': ,
-
-  // Drawer
-  // 'drawer-header-padding': ,
-
-  // Tooltip
-  // 'tooltip-bg': ,
-  // 'tooltip-color': ,
+  'btn-border-radius-base': '8px',
+  'btn-default-color': '#1890FF',
+  'btn-default-border': '#1890FF',
 
   // Input
-  // 'input-border-color': ,
-
-  // Divider
-  // 'divider-color': ,
+  'input-placeholder-color': '#fff',
+  'input-border-color': '#1C5182',
+  'input-bg': 'rgba(48, 62, 117, 0.6)',
 
   // Select
-  // 'select-selection-item-bg': ,
-  // 'select-border-color': ,
-  // 'select-item-selected-color': ,
-  // 'select-item-selected-bg': ,
-  // 'select-item-active-bg': ,
+  'select-border-color': '#D9D9D9',
+  // 'select-dropdown-bg': 'rgba(48, 62, 117, 0.6)',
+  // 'select-background': 'rgba(48, 62, 117, 0.6)',
+
+  // Popover
+  // 'popover-bg': 'rgba(48, 62, 117, 0.6)',
+
+  // Tree
+  // 'tree-bg': 'rgba(48, 62, 117, 0.6)',
 };

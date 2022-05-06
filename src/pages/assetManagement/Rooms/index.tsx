@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { DatePicker, Divider } from 'antd';
+import { Button, Divider, Space } from 'antd';
+import EditDrawer from './components/EditDrawer';
 // import styles from './index.less';
 
 interface DataType {
@@ -12,17 +13,17 @@ interface DataType {
 const originData: DataType[] = [
   {
     id: '1',
-    name: '任务1',
+    name: '机房1',
     time: '2022-03-15 12:00',
   },
   {
     id: '2',
-    name: '任务2',
+    name: '机房2',
     time: '2022-03-15 13:00',
   },
 ];
 
-const ToDoInventory: React.FC = () => {
+const Rooms: React.FC = () => {
   const ref = useRef<ActionType>();
   const [editDrawerData, setEditDrawerData] = useState<{
     visible: boolean;
@@ -35,42 +36,20 @@ const ToDoInventory: React.FC = () => {
       title: '序号',
       dataIndex: 'id',
       search: false,
+      // hideInForm: true,
     },
     {
-      title: '任务名称',
+      title: '机房名称',
       dataIndex: 'name',
     },
     {
-      title: '完成时间',
+      title: '所在区域',
+      dataIndex: 'address',
+    },
+    {
+      title: '最后更新',
       dataIndex: 'time',
-      renderFormItem: () => {
-        return (
-          <DatePicker.RangePicker
-            placeholder={['开始时间', '结束时间']}
-            showTime={{ format: 'HH:mm' }}
-            format="YYYY-MM-DD HH:mm"
-          />
-        );
-      },
-    },
-    {
-      title: '入库数量',
-      dataIndex: 'count',
-      search: false,
-    },
-    {
-      title: '盘盈',
-      dataIndex: 'surplusCount',
-      search: false,
-    },
-    {
-      title: '盘亏',
-      dataIndex: 'lossCount',
-      search: false,
-    },
-    {
-      title: '成功率',
-      dataIndex: 'successRate',
+      valueType: 'dateTime',
       search: false,
     },
     {
@@ -79,8 +58,10 @@ const ToDoInventory: React.FC = () => {
       render: (_, record) => (
         <>
           <a onClick={() => setEditDrawerData({ visible: true, data: record })}>
-            查看
+            编辑
           </a>
+          <Divider type="vertical" />
+          <a>删除</a>
         </>
       ),
     },
@@ -112,6 +93,12 @@ const ToDoInventory: React.FC = () => {
       <ProTable
         columns={columns}
         request={fetchData}
+        headerTitle={
+          <Space>
+            <Button type="primary">添加机房</Button>
+            <Button>批量删除</Button>
+          </Space>
+        }
         rowSelection={{
           selectedRowKeys,
           onChange: (keys: any) => {
@@ -131,8 +118,13 @@ const ToDoInventory: React.FC = () => {
           span: 6,
         }}
       />
+      <EditDrawer
+        visible={editDrawerData.visible}
+        onClose={() => setEditDrawerData({ visible: false })}
+        data={editDrawerData.data}
+      />
     </>
   );
 };
 
-export default ToDoInventory;
+export default Rooms;

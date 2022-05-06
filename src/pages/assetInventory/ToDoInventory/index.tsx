@@ -24,7 +24,10 @@ const originData: DataType[] = [
 
 const ToDoInventory: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [editDrawerData, setEditDrawerData] = useState<{ visible: boolean, data?: any }>({ visible: false });
+  const [editDrawerData, setEditDrawerData] = useState<{
+    visible: boolean;
+    data?: any;
+  }>({ visible: false });
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   const columns: ProColumns<DataType>[] = [
@@ -67,15 +70,11 @@ const ToDoInventory: React.FC = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
-          <a
-            onClick={() => setEditDrawerData({ visible: true, data: record })}
-          >
+          <a onClick={() => setEditDrawerData({ visible: true, data: record })}>
             查看
           </a>
-          <Divider type='vertical' />
-          <a>
-            删除
-          </a>
+          <Divider type="vertical" />
+          <a>删除</a>
         </>
       ),
     },
@@ -115,14 +114,14 @@ const ToDoInventory: React.FC = () => {
         }}
         pagination={{
           pageSize: 20,
+          size: 'default',
           showSizeChanger: true,
+          showQuickJumper: true,
         }}
         scroll={{ y: 450 }}
         actionRef={ref}
-        rowKey='id'
+        rowKey="id"
         search={{
-          defaultCollapsed: false,
-          collapseRender: () => <></>,
           span: 6,
         }}
       />

@@ -25,7 +25,10 @@ const originData: DataType[] = [
 
 const InventoryPlan: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [editDrawerData, setEditDrawerData] = useState<{ visible: boolean, data?: any }>({ visible: false });
+  const [editDrawerData, setEditDrawerData] = useState<{
+    visible: boolean;
+    data?: any;
+  }>({ visible: false });
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   const columns: ProColumns<DataType>[] = [
@@ -68,16 +71,12 @@ const InventoryPlan: React.FC = () => {
       render: (_, record) => (
         <>
           <a>启动</a>
-          <Divider type='vertical' />
-          <a
-            onClick={() => setEditDrawerData({ visible: true, data: record })}
-          >
+          <Divider type="vertical" />
+          <a onClick={() => setEditDrawerData({ visible: true, data: record })}>
             编辑
           </a>
-          <Divider type='vertical' />
-          <a>
-            删除
-          </a>
+          <Divider type="vertical" />
+          <a>删除</a>
         </>
       ),
     },
@@ -117,14 +116,16 @@ const InventoryPlan: React.FC = () => {
         }}
         pagination={{
           pageSize: 20,
+          size: 'default',
           showSizeChanger: true,
+          showQuickJumper: true,
         }}
         scroll={{ y: 450 }}
         actionRef={ref}
-        rowKey='id'
+        rowKey="id"
         search={{
-          defaultCollapsed: false,
-          collapseRender: () => <></>,
+          // defaultCollapsed: false,
+          // collapseRender: () => <></>,
           span: 6,
         }}
       />

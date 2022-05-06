@@ -11,7 +11,9 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
-  antd: {},
+  antd: {
+    dark: true,
+  },
   routes: routes,
   theme: theme,
   //define: {},

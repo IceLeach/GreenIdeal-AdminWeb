@@ -10,13 +10,16 @@ const IconMap = {
   history: <HistoryOutlined />,
   userSet: <SettingOutlined />,
 };
+
+/**
+ * @deprecated 已废弃 导航栏直接读config/routes
+ */
 export default {
   route: {
     path: '/',
     routes: [
       {
         path: '/dashboard',
-        exact: true,
         name: '欢迎',
         icon: IconMap.home,
       },
@@ -27,41 +30,53 @@ export default {
         icon: IconMap.history,
       },
       {
-        path: '/roomAndCabinet',
-        name: '机房机柜',
+        path: '/assetManagement',
+        name: '资产管理',
         icon: IconMap.userSet,
         routes: [
           {
-            path: '/roomAndCabinet/rooms',
-            exact: true,
+            path: '/assetManagement/rooms',
             name: '机房管理',
             icon: IconMap.userSet,
           },
           {
-            path: '/roomAndCabinet/cabinets',
-            exact: true,
+            path: '/assetManagement/cabinets',
             name: '机柜管理',
+            icon: IconMap.userSet,
+          },
+          {
+            path: '/assetManagement/rackEquipment',
+            name: '机架设备',
+            icon: IconMap.userSet,
+          },
+          {
+            path: '/assetManagement/infrastructure',
+            name: '基础设施',
+            icon: IconMap.userSet,
+          },
+          {
+            path: '/assetManagement/spareParts',
+            name: '配件备件',
             icon: IconMap.userSet,
           },
         ],
       },
       {
-        path: '/rackEquipment',
-        exact: true,
-        name: '机架设备',
+        path: '/assetVisualization',
+        name: '资产可视化',
         icon: IconMap.userSet,
-      },
-      {
-        path: '/spareParts',
-        exact: true,
-        name: '配件备件',
-        icon: IconMap.userSet,
-      },
-      {
-        path: '/infrastructure',
-        exact: true,
-        name: '基础设施',
-        icon: IconMap.userSet,
+        routes: [
+          {
+            path: '/assetVisualization/monitorView',
+            name: '监视视图',
+            icon: IconMap.userSet,
+          },
+          {
+            path: '/assetVisualization/monitorSetting',
+            name: '监视设置',
+            icon: IconMap.userSet,
+          },
+        ],
       },
       {
         path: '/assetInventory',
@@ -70,29 +85,37 @@ export default {
         routes: [
           {
             path: '/assetInventory/toDoInventory',
-            exact: true,
             name: '待办盘点',
             icon: IconMap.userSet,
           },
           {
             path: '/assetInventory/inventoryRecord',
-            exact: true,
             name: '盘点记录',
             icon: IconMap.userSet,
           },
           {
             path: '/assetInventory/inventoryPlan',
-            exact: true,
             name: '盘点计划',
             icon: IconMap.userSet,
           },
         ],
       },
       {
-        path: '/changeManagement',
-        exact: true,
-        name: '变更管理',
+        path: '/assetChange',
+        name: '资产变更',
         icon: IconMap.userSet,
+        routes: [
+          {
+            path: '/assetChange/changeRecord',
+            name: '变更记录',
+            icon: IconMap.userSet,
+          },
+          {
+            path: '/assetChange/processSetting',
+            name: '流程设置',
+            icon: IconMap.userSet,
+          },
+        ],
       },
       {
         path: '/capacityManagement',
@@ -101,22 +124,16 @@ export default {
         routes: [
           {
             path: '/capacityManagement/capacityPlanning',
-            exact: true,
             name: '容量规划',
+            icon: IconMap.userSet,
+          },
+          {
+            path: '/capacityManagement/capacitySetting',
+            name: '容量设置',
             icon: IconMap.userSet,
           },
         ],
       },
-      // {
-      //   path: '/page2',
-      //   name: 'mxgraph',
-      //   icon: IconMap.userSet,
-      // },
-      // {
-      //   path: '/page3',
-      //   name: 'Html Page',
-      //   icon: IconMap.userSet,
-      // },
     ],
   },
   location: {

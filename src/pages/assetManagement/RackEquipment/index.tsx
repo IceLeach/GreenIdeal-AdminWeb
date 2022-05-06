@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { DatePicker, Divider } from 'antd';
-// import styles from './index.less';
+import { Button, Divider, Select, Space } from 'antd';
+import EditDrawer from './components/EditDrawer';
+import styles from './index.less';
 
 interface DataType {
   id: string;
@@ -12,17 +13,57 @@ interface DataType {
 const originData: DataType[] = [
   {
     id: '1',
-    name: '任务1',
+    name: '设备1',
     time: '2022-03-15 12:00',
   },
   {
     id: '2',
-    name: '任务2',
+    name: '设备2',
+    time: '2022-03-15 13:00',
+  },
+  {
+    id: '3',
+    name: '设备2',
+    time: '2022-03-15 13:00',
+  },
+  {
+    id: '4',
+    name: '设备2',
+    time: '2022-03-15 13:00',
+  },
+  {
+    id: '5',
+    name: '设备2',
+    time: '2022-03-15 13:00',
+  },
+  {
+    id: '6',
+    name: '设备2',
+    time: '2022-03-15 13:00',
+  },
+  {
+    id: '7',
+    name: '设备2',
+    time: '2022-03-15 13:00',
+  },
+  {
+    id: '8',
+    name: '设备2',
+    time: '2022-03-15 13:00',
+  },
+  {
+    id: '9',
+    name: '设备2',
+    time: '2022-03-15 13:00',
+  },
+  {
+    id: '10',
+    name: '设备2',
     time: '2022-03-15 13:00',
   },
 ];
 
-const ToDoInventory: React.FC = () => {
+const RackEquipment: React.FC = () => {
   const ref = useRef<ActionType>();
   const [editDrawerData, setEditDrawerData] = useState<{
     visible: boolean;
@@ -37,41 +78,28 @@ const ToDoInventory: React.FC = () => {
       search: false,
     },
     {
-      title: '任务名称',
+      title: '资产编号',
+      dataIndex: 'uid',
+    },
+    {
+      title: '设备名称',
       dataIndex: 'name',
     },
     {
-      title: '完成时间',
-      dataIndex: 'time',
+      title: '资产分类',
+      dataIndex: 'classification',
+    },
+    {
+      title: '资产状态',
+      dataIndex: 'state',
       renderFormItem: () => {
         return (
-          <DatePicker.RangePicker
-            placeholder={['开始时间', '结束时间']}
-            showTime={{ format: 'HH:mm' }}
-            format="YYYY-MM-DD HH:mm"
-          />
+          <Select placeholder="请选择">
+            <Select.Option value={1}>部署</Select.Option>
+            <Select.Option value={2}>库存</Select.Option>
+          </Select>
         );
       },
-    },
-    {
-      title: '入库数量',
-      dataIndex: 'count',
-      search: false,
-    },
-    {
-      title: '盘盈',
-      dataIndex: 'surplusCount',
-      search: false,
-    },
-    {
-      title: '盘亏',
-      dataIndex: 'lossCount',
-      search: false,
-    },
-    {
-      title: '成功率',
-      dataIndex: 'successRate',
-      search: false,
     },
     {
       title: '操作',
@@ -79,8 +107,10 @@ const ToDoInventory: React.FC = () => {
       render: (_, record) => (
         <>
           <a onClick={() => setEditDrawerData({ visible: true, data: record })}>
-            查看
+            编辑
           </a>
+          <Divider type="vertical" />
+          <a>删除</a>
         </>
       ),
     },
@@ -112,6 +142,14 @@ const ToDoInventory: React.FC = () => {
       <ProTable
         columns={columns}
         request={fetchData}
+        headerTitle={
+          <Space>
+            <Button className={styles.btn}>添加设备</Button>
+            <Button>批量删除</Button>
+            <Button>打印二维码</Button>
+            <Button>导出到Excel</Button>
+          </Space>
+        }
         rowSelection={{
           selectedRowKeys,
           onChange: (keys: any) => {
@@ -119,7 +157,7 @@ const ToDoInventory: React.FC = () => {
           },
         }}
         pagination={{
-          pageSize: 20,
+          pageSize: 1,
           size: 'default',
           showSizeChanger: true,
           showQuickJumper: true,
@@ -131,8 +169,13 @@ const ToDoInventory: React.FC = () => {
           span: 6,
         }}
       />
+      <EditDrawer
+        visible={editDrawerData.visible}
+        onClose={() => setEditDrawerData({ visible: false })}
+        data={editDrawerData.data}
+      />
     </>
   );
 };
 
-export default ToDoInventory;
+export default RackEquipment;

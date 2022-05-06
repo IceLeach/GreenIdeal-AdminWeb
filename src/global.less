@@ -34,58 +34,112 @@
   border-radius: 0;
 }
 
-.ant-pro-table
-  > .ant-card
-  .ant-table-header
-  .ant-table-thead
-  > tr
-  > .ant-table-cell::before {
-  display: none;
+// Input
+.ant-input {
+  caret-color: #fff;
+  box-shadow: inset 0px 0px 6px 1px #1f3fb6;
+}
+.ant-input-affix-wrapper {
+  box-shadow: inset 0px 0px 6px 1px #1f3fb6;
+  .ant-input {
+    background: transparent;
+    box-shadow: none;
+  }
 }
 
-// .ant-pro-table{
-//   .ant-pro-table-search.ant-pro-table-search-query-filter{
-//     background: #303e75;
-//     .ant-form-item-label > label{
-//       color: #fff;
-//     }
-//     .ant-input-affix-wrapper{
-//       background: #303e75;
-//       .ant-input{
-//         background: #303e75;
-//       }
-//     }
-//     .ant-select-selector{
-//       background: transparent !important;
-//     }
-//   }
-//   .ant-card{
-//     background: #303e75;
-//     .ant-table{
-//       background: #303e75;
-//       color: #fff;
-//     }
-//     .ant-table-thead>tr>.ant-table-cell{
-//       background: #303e75;
-//       color: #fff;
-//     }
-//   }
-//   .ant-pro-table-list-toolbar-setting-item{
-//     color: #fff;
-//   }
-//   .ant-pagination-total-text{
-//     color:#fff;
-//   }
-//   .ant-pagination-item-link{
-//     color: #fff;
-//   }
-//   .ant-picker.ant-picker-range{
-//     background: transparent;
-//     .ant-picker-separator{
-//       color: #fff;
-//     }
-//     .ant-picker-suffix{
-//       color: #fff;
-//     }
-//   }
-// }
+// Select
+.ant-select {
+  .ant-select-arrow {
+    color: #fff;
+  }
+}
+
+// Table
+.ant-table-wrapper {
+  .ant-table-tbody > tr.ant-table-row-selected > td {
+    border-color: @table-border-color;
+  }
+}
+
+// Pagination
+.ant-pagination.ant-table-pagination {
+  .ant-pagination-prev > .ant-pagination-item-link,
+  .ant-pagination-next > .ant-pagination-item-link {
+    border-radius: 8px;
+  }
+  .ant-pagination-prev:not(.ant-pagination-disabled)
+    > .ant-pagination-item-link,
+  .ant-pagination-next:not(.ant-pagination-disabled)
+    > .ant-pagination-item-link {
+    border-color: #d9d9d9;
+    &:hover {
+      border-color: #1890ff;
+    }
+  }
+  .ant-pagination-prev.ant-pagination-disabled > .ant-pagination-item-link,
+  .ant-pagination-next.ant-pagination-disabled > .ant-pagination-item-link {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  .ant-pagination-item {
+    border-radius: 8px;
+    margin-right: 16px;
+  }
+  .ant-pagination-item:not(.ant-pagination-item-active) {
+    border-color: #d9d9d9;
+    &:hover {
+      border-color: #1890ff;
+    }
+  }
+  .ant-pagination-prev,
+  .ant-pagination-jump-prev,
+  .ant-pagination-jump-next {
+    margin-right: 16px;
+  }
+  .ant-pagination-total-text {
+    margin-right: 16px;
+  }
+  .ant-pagination-options-quick-jumper {
+    margin-left: 16px;
+  }
+  .ant-pagination-jump-prev
+    .ant-pagination-item-container
+    .ant-pagination-item-ellipsis,
+  .ant-pagination-jump-next
+    .ant-pagination-item-container
+    .ant-pagination-item-ellipsis {
+    color: #fff;
+  }
+  .ant-pagination-options-quick-jumper > input {
+    border-color: #d9d9d9;
+    border-radius: 8px;
+  }
+  .ant-pagination-options-size-changer > .ant-select-selector {
+    border-radius: 6px;
+  }
+}
+
+// ProTable
+.ant-pro-table {
+  .ant-pro-table-search.ant-pro-table-search-query-filter {
+    background: #283460;
+    border-radius: 8px;
+    box-shadow: 0px 2px 17px -7px #0c1229;
+    .ant-form-item > .ant-form-item-label > label {
+      color: #fff;
+    }
+  }
+  .ant-card {
+    background: #303e75;
+    border-radius: 8px;
+    .ant-pro-table-list-toolbar-container
+      .ant-pro-table-list-toolbar-setting-item {
+      color: #fff;
+    }
+    .ant-table-header .ant-table-thead > tr > .ant-table-cell::before {
+      display: none;
+    }
+  }
+  .ant-table-container > .ant-table-body {
+    overflow-y: auto !important;
+  }
+}

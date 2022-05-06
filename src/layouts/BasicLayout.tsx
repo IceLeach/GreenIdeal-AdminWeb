@@ -1,31 +1,31 @@
 import React, { useState } from 'react';
-import ProLayout, {
-  DefaultFooter,
-  PageContainer,
-} from '@ant-design/pro-layout';
+// import ProLayout, {
+//   DefaultFooter,
+//   PageContainer,
+// } from '@ant-design/pro-layout';
+import ProLayout from '@ant-design/pro-layout';
 import { history, Link } from 'umi';
 import { Avatar } from 'antd';
 import {
   BellOutlined,
   QuestionCircleOutlined,
   SearchOutlined,
-  // HomeOutlined,
-  // HistoryOutlined,
-  // SettingOutlined,
+  HomeOutlined,
+  HistoryOutlined,
+  SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import logo from '@/assets/logo.png';
 import headerImg from '@/assets/headerImg.png';
 import message from '@/assets/message.svg';
 import styles from './BasicLayout.less';
-// 临时方案 后续会直接读config/routes
-import defaultProps from './defaultProps';
+// import defaultProps from './defaultProps';
 
-// const IconMap: any = {
-//   home: <HomeOutlined />,
-//   history: <HistoryOutlined />,
-//   userSet: <SettingOutlined />,
-// };
+const IconMap: any = {
+  home: <HomeOutlined />,
+  history: <HistoryOutlined />,
+  setting: <SettingOutlined />,
+};
 
 const title: any = (
   <div className={styles.headerTitle}>
@@ -38,7 +38,21 @@ const title: any = (
 
 const BasicLayout = (props: any) => {
   // console.log('props', props.route)
-  // const [pathname, setPathname] = useState(window.location.pathname ?? '/');
+
+  let layoutRoute = props.route;
+  const setLayoutRoute = (route: any[]) => {
+    route.forEach((item) => {
+      if (item.icon) {
+        item.icon = IconMap[item.icon];
+      }
+      if (item.routes) {
+        setLayoutRoute(item.routes);
+      }
+    });
+  };
+  setLayoutRoute(layoutRoute.routes);
+  // console.log('layoutRoute', layoutRoute)
+
   return (
     <div
       id="test-pro-layout"
@@ -47,29 +61,17 @@ const BasicLayout = (props: any) => {
       }}
     >
       <ProLayout
-        {...defaultProps}
-        // {...props}
+        // {...defaultProps}
+        route={layoutRoute}
         layout="mix"
         className={styles.layout}
         breadcrumbRender={false}
         // location={{ pathname }}
         location={props.location}
         fixSiderbar
-        onMenuHeaderClick={(e) => {
-          // console.log(e);
-          // setPathname('/');
-          history.push('/');
-        }}
+        onMenuHeaderClick={() => history.push('/dashboard')}
         menuItemRender={(item: any, dom) => (
-          <Link
-            to={item.path ?? '/'}
-            // onClick={() => {
-            //   setPathname(item.path ?? '/');
-            // }}
-          >
-            {/* {item.menuIcon && IconMap[item.menuIcon]} */}
-            {dom}
-          </Link>
+          <Link to={item.path ?? '/'}>{dom}</Link>
         )}
         title={title}
         logo={logo}
