@@ -150,6 +150,70 @@ export default [
           { component: './404' },
         ],
       },
+      {
+        path: '/reportManagement',
+        redirect: '/reportManagement/assetReport',
+      },
+      {
+        path: '/reportManagement',
+        name: '报表管理',
+        icon: 'setting',
+        routes: [
+          {
+            path: '/reportManagement/assetReport',
+            // component: '',
+            name: '资产报表',
+          },
+          {
+            path: '/reportManagement/capacityReport',
+            // component: '',
+            name: '容量报表',
+          },
+          {
+            path: '/reportManagement/reportSetting',
+            // component: '',
+            name: '报表设置',
+          },
+          { component: './404' },
+        ],
+      },
+      {
+        path: '/systemManagement',
+        redirect: '/systemManagement/userManagement',
+      },
+      {
+        path: '/systemManagement',
+        name: '系统管理',
+        icon: 'setting',
+        routes: [
+          {
+            path: '/systemManagement/userManagement',
+            // component: '',
+            name: '用户管理',
+          },
+          {
+            path: '/systemManagement/roleManagement',
+            // component: '',
+            name: '角色管理',
+          },
+          {
+            path: '/systemManagement/authorityManagement',
+            // component: '',
+            name: '权限管理',
+          },
+          {
+            path: '/systemManagement/configurationManagement',
+            // component: '',
+            name: '配置管理',
+          },
+          {
+            path: '/systemManagement/enumerationManagement',
+            // component: '',
+            name: '枚举管理',
+          },
+          { component: './404' },
+        ],
+      },
       { component: './404' },
     ],
   },

@@ -14,7 +14,7 @@ const IconMap = {
 /**
  * @deprecated 已废弃 导航栏直接读config/routes
  */
-export default {
+const route = {
   route: {
     path: '/',
     routes: [
@@ -140,3 +140,5 @@ export default {
     pathname: '',
   },
 };
+
+export default route;

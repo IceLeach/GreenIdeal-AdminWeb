@@ -5,6 +5,9 @@ import theme from './theme';
 export default defineConfig({
   hash: true,
   title: false,
+  dva: {
+    hmr: true,
+  },
   dynamicImport: {
     loading: '@/components/PageLoading',
   },
@@ -21,9 +24,11 @@ export default defineConfig({
     type: 'none',
     // exclude: [],
   },
+  ignoreMomentLocale: true,
   // history: { type: 'hash' },
   // base: '/dist',
   // exportStatic: {},
   publicPath: '/',
+  fastRefresh: {},
   // externals: { 'AMap': 'window.AMap' },
 });

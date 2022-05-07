@@ -3,25 +3,26 @@ import SearchTree from '@/components/SearchTree';
 import DragBox, { DragBoxItemType } from './components/DragBox';
 import styles from './index.less';
 import DropContainer from './components/DropContainer';
+import MapDesigner from './components/MapDesigner';
 
 const treeData = [
   {
     title: '机房一',
     key: '1',
     name: '机房一',
-    type: 'a',
+    type: 'map',
     children: [
       {
         title: '机柜一',
         key: '1-1',
         name: '机柜一',
-        type: 'b',
+        type: 'container',
       },
       {
         title: '机柜二',
         key: '1-2',
         name: '机柜二',
-        type: 'b',
+        type: 'container',
       },
     ],
   },
@@ -29,19 +30,19 @@ const treeData = [
     title: '机房二',
     key: '2',
     name: '机房二',
-    type: 'a',
+    type: 'map',
     children: [
       {
         title: '机房2-1',
         key: '2-1',
         name: '机房2-1',
-        type: 'a',
+        type: 'map',
         children: [
           {
             title: '机柜四',
             key: '2-1-1',
             name: '机柜四',
-            type: 'b',
+            type: 'container',
           },
         ],
       },
@@ -51,7 +52,7 @@ const treeData = [
     title: '机房三',
     key: '3',
     name: '机房三',
-    type: 'a',
+    type: 'map',
   },
 ];
 const dragList = [
@@ -67,9 +68,9 @@ const CapacityPlanning: React.FC = () => {
     null,
   );
 
-  useEffect(() => {
-    console.log('activeNode', activeNode);
-  }, [activeNode]);
+  // useEffect(() => {
+  //   console.log('activeNode', activeNode);
+  // }, [activeNode]);
   useEffect(() => {
     console.log('draggingItem', draggingItem);
   }, [draggingItem]);
@@ -85,13 +86,13 @@ const CapacityPlanning: React.FC = () => {
           }}
           activeKey={activeNode ? [activeNode.key] : []}
           placeholder="请输入资产名称"
-          style={{ height: 500, background: '#fff' }}
+          style={{ height: 500 }}
         />
-        <div style={{ height: 500, background: '#fff' }}>
+        <div style={{ height: 500 }}>
           <div style={{ borderTop: '1px solid' }}>待部署设备</div>
           <div>
-            {!activeNode || activeNode.type === 'a' ? (
-              <div></div>
+            {!activeNode || activeNode.type === 'map' ? (
+              ''
             ) : (
               <DragBox boxData={dragList} setDraggingItem={setDraggingItem} />
             )}
@@ -101,8 +102,8 @@ const CapacityPlanning: React.FC = () => {
       <div className={styles.rightContent}>
         {!activeNode ? (
           ''
-        ) : activeNode.type === 'a' ? (
-          ''
+        ) : activeNode.type === 'map' ? (
+          <MapDesigner />
         ) : (
           <DropContainer
             containerSize={containerSize}

@@ -8,6 +8,7 @@ interface DragItemProps {
   onDragChange: (key: string, dragging: boolean) => void;
   style?: React.CSSProperties;
   transparentWhenDragging?: boolean;
+  /** 拖拽时隐藏原始组件 */
   hiddenOriginWhenDragging?: boolean;
 }
 

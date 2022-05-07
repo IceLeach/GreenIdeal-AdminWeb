@@ -39,7 +39,7 @@ const title: any = (
 const BasicLayout = (props: any) => {
   // console.log('props', props.route)
 
-  let layoutRoute = props.route;
+  const layoutRoute = props.route;
   const setLayoutRoute = (route: any[]) => {
     route.forEach((item) => {
       if (item.icon) {
