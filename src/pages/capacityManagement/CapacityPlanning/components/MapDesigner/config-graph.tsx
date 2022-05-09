@@ -16,6 +16,7 @@ export const useGraphConfig = createGraphConfig((config) => {
       min: 0.2,
       max: 3,
     },
+    scroller: true,
     /** 画布滚轮缩放 */
     // mousewheel: {
     //   enabled: true,

@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useRef } from 'react';
 /** 图核心组件 & 类型定义 */
 import {
+  CanvasContextMenu,
+  CanvasNodePortTooltip,
   CanvasToolbar,
   createToolbarConfig,
+  FlowchartCanvas,
+  FlowchartExtension,
+  FlowchartFormPanel,
+  FlowchartNodePanel,
   IAppLoad,
   IconStore,
+  IGraphCommandService,
+  IModelService,
   IToolbarItemOptions,
   JsonSchemaForm,
+  KeyBindings,
   NodeCollapsePanel,
   NsGraph,
   NsGraphCmd,
@@ -33,7 +42,15 @@ import {
 import { controlMapService, ControlShapeEnum } from './custom-shapes';
 
 import styles from './index.less';
-import { FormPanel } from './FormPanel';
+import FormPanel from './FormPanel';
+import { Cell, Graph } from '@antv/x6';
+import { useCmdConfig } from './config-cmd';
+import { DndNode } from './react-node/dnd-node';
+import { useMenuConfig } from './config-menu';
+import { useKeybindingConfig } from './config-keybinding';
+import { useToolbarConfig } from './config-toolbar';
+import 'antd/lib/collapse/style/index';
+import { nodePanel } from './node-panel-config';
 
 export interface IProps {}
 
@@ -156,6 +173,64 @@ namespace NsJsonForm {
   };
 }
 
+const formSchemaService: (args: {
+  cell: Cell;
+  targetType: NsJsonSchemaForm.TargetType;
+  targetData: NsJsonSchemaForm.TargetData;
+  modelService: IModelService;
+  commandService: IGraphCommandService;
+}) => Promise<NsJsonSchemaForm.ISchema> = async (args) => {
+  const { targetType } = args;
+  const isGroup = args.targetData?.isGroup;
+  const nodeSchema = {
+    tabs: [
+      {
+        name: '设置',
+        groups: [
+          {
+            name: 'groupName',
+            controls: [
+              {
+                label: '节点名',
+                name: '自定义form',
+                shape: 'rename-service',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  if (isGroup) {
+    // TODO
+  }
+  if (targetType === 'edge') {
+    // TODO
+  }
+  if (targetType === 'node') {
+    return nodeSchema;
+  }
+  return {
+    tabs: [
+      {
+        name: '设置',
+        groups: [
+          {
+            name: 'groupName',
+            controls: [
+              {
+                label: '',
+                name: 'canvas-service',
+                shape: 'canvas-service',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+};
+
 namespace NsConfig {
   /** 注册icon 类型 */
   IconStore.set('PlusCircleOutlined', PlusCircleOutlined);
@@ -189,50 +264,73 @@ namespace NsConfig {
   };
 }
 
-const useToolbarConfig = createToolbarConfig((toolbarConfig) => {
-  /** 生产 toolbar item */
-  toolbarConfig.setToolbarModelService(async (toolbarModel) => {
-    const toolbarItems = await NsConfig.getToolbarItems();
-    toolbarModel.setValue((toolbar) => {
-      toolbar.mainGroups = toolbarItems;
-    });
-  });
-});
+// const useToolbarConfig = createToolbarConfig((toolbarConfig) => {
+//   /** 生产 toolbar item */
+//   toolbarConfig.setToolbarModelService(async (toolbarModel) => {
+//     const toolbarItems = await NsConfig.getToolbarItems();
+//     toolbarModel.setValue((toolbar) => {
+//       toolbar.mainGroups = toolbarItems;
+//     });
+//   });
+// });
 
 const MapDesigner: React.FC = () => {
   const toolbarConfig = useToolbarConfig();
   /** 画布配置 */
   const graphConfig = useGraphConfig();
 
+  const commandConfig = useCmdConfig();
+  const menuConfig = useMenuConfig();
+  const keybindingConfig = useKeybindingConfig();
+
+  const graphRef = useRef<Graph>();
+
   /** 画布渲染数据 */
   // const [graphData, setGraphData] = useState<NsGraph.IGraphData>()
 
   /** XFlow初始化完成的回调 */
   const onLoad: IAppLoad = async (app) => {
+    // app.executeCommand<NsNodeCmd.AddNode.IArgs>(XFlowNodeCommands.ADD_NODE.id, {
+    //   nodeConfig: {
+    //     id: 'node1',
+    //     x: 450,
+    //     y: 250,
+    //     label: 'Hello World 1',
+    //     renderKey: 'MYNODE',
+    //     data: { p: '1', z: '2' },
+    //     // width,
+    //     // height,
+    //   },
+    // });
     app.executeCommand<NsNodeCmd.AddNode.IArgs>(XFlowNodeCommands.ADD_NODE.id, {
       nodeConfig: {
-        id: 'node1',
-        x: 450,
-        y: 250,
-        label: 'Hello World 1',
-        renderKey: 'MYNODE',
-        data: { p: '1', z: '2' },
-        // width,
-        // height,
+        id: 'node-678e6110-fe81-41b2-8f8c-c5ab06c399ce',
+        x: 230,
+        y: 230,
+        zIndex: 10,
+        renderKey: 'cabinet',
+        label: '',
+        isCustom: true,
+        data: { a: 1, b: '2' },
+        width: 40,
+        height: 40,
+        name: 'cabinet',
       },
     });
 
-    const graph = await app.getGraphInstance();
-    graph.on('node:click', ({ node }) => {
-      const nodeData: NsGraph.INodeConfig = node.getData();
-      message.success(`${nodeData.id}节点被点击了`);
-    });
+    // const graph = await app.getGraphInstance();
+    // graph.on('node:click', ({ node }) => {
+    //   const nodeData: NsGraph.INodeConfig = node.getData();
+    //   message.success(`${nodeData.id}节点被点击了`);
+    // });
+    graphRef.current = await app.getGraphInstance();
   };
 
   return (
     <div style={{ height: '100%' }}>
       <XFlow
         className={styles.userContainer}
+        commandConfig={commandConfig}
         // graphData={graphData}
         // graphLayout={{
         //   layoutType: 'dagre',
@@ -246,7 +344,42 @@ const MapDesigner: React.FC = () => {
         onLoad={onLoad}
         isAutoCenter={true}
       >
-        <NodeCollapsePanel
+        <FlowchartExtension />
+        <FlowchartNodePanel
+          showOfficial={false}
+          // @ts-ignore
+          registerNode={nodePanel}
+          position={{ width: 290, top: 40, bottom: 0, left: 0 }}
+        />
+        <CanvasToolbar
+          className="xflow-workspace-toolbar-top"
+          layout="horizontal"
+          config={toolbarConfig}
+          position={{ top: 0, left: 0, right: 0, bottom: 0 }}
+        />
+        <FlowchartCanvas position={{ top: 40, left: 0, right: 0, bottom: 0 }}>
+          <CanvasScaleToolbar
+            layout="horizontal"
+            position={{ top: -40, right: 0 }}
+            style={{
+              width: 150,
+              left: 'auto',
+              height: 39,
+            }}
+          />
+          <CanvasContextMenu config={menuConfig} />
+          <CanvasSnapline color="#faad14" />
+          <CanvasNodePortTooltip />
+        </FlowchartCanvas>
+        <FormPanel />
+        {/* <FlowchartFormPanel
+          show={true}
+          position={{ width: 290, top: 40, bottom: 0, right: 0 }}
+        // controlMapService={controlMapService}
+        // formSchemaService={NsJsonForm.formSchemaService}
+        /> */}
+        <KeyBindings config={keybindingConfig} />
+        {/* <NodeCollapsePanel
           header={<div> 组件面板 </div>}
           footer={<div> Foorter </div>}
           onNodeDrop={panelConfig.onNodeDrop}
@@ -259,8 +392,8 @@ const MapDesigner: React.FC = () => {
             config={toolbarConfig}
             position={{ top: 0, left: 0, right: 0, height: 40 }}
           />
-          <CanvasScaleToolbar position={{ top: 48, left: 12 }} />
-          {/* <CanvasMiniMap
+          <CanvasScaleToolbar position={{ top: 48, left: 12 }} /> */}
+        {/* <CanvasMiniMap
             miniMapClz="xflow-custom-minimap"
             nodeFillColor="#ccc"
             minimapOptions={{
@@ -269,9 +402,9 @@ const MapDesigner: React.FC = () => {
             }}
             position={{ top: 12, right: 312 }}
           /> */}
-          <CanvasSnapline color="#1890ff" />
+        {/* <CanvasSnapline color="#1890ff" />
         </XFlowCanvas>
-        <FormPanel />
+        <FormPanel /> */}
         {/* <JsonSchemaForm
           controlMapService={controlMapService}
           formSchemaService={NsJsonForm.formSchemaService}
