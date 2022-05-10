@@ -105,7 +105,17 @@ import { cloneDeep, set } from 'lodash';
 //   );
 // };
 
-const ConfigPanel: React.FC = () => {
+export interface FormPanelRefType {
+  updateFormPanel?: (config: any) => void;
+  reloadFormPanel?: () => void;
+}
+
+interface ConfigPanelProps {
+  panelRef: React.MutableRefObject<FormPanelRefType>;
+}
+
+const ConfigPanel: React.FC<ConfigPanelProps> = (props) => {
+  const { panelRef } = props;
   const app = useXFlowApp();
   const [nodeData, setNodeData] = useState<any>();
   const [selectNode] = useModelAsync<MODELS.SELECTED_NODE.IState>({
@@ -114,17 +124,23 @@ const ConfigPanel: React.FC = () => {
     initialState: null,
   });
 
-  const resetNodeData = () => {
-    if (selectNode) {
+  const resetNodeData = (selectedNode: any) => {
+    if (selectedNode) {
       // @ts-ignore
       const nodeConfig = selectNode.getData();
       console.log('nodeConfig', nodeConfig);
       setNodeData(nodeConfig);
     }
   };
+  const updateNodeData = (config: any) => {
+    console.log('config', config);
+    setNodeData(config);
+  };
 
   useEffect(() => {
-    resetNodeData();
+    panelRef.current.updateFormPanel = updateNodeData;
+    panelRef.current.reloadFormPanel = () => resetNodeData(selectNode);
+    resetNodeData(selectNode);
   }, [selectNode]);
 
   const saveData = (isData: boolean, key: string, value: any) => {
@@ -140,7 +156,7 @@ const ConfigPanel: React.FC = () => {
           },
         )
         .then(() => {
-          resetNodeData();
+          resetNodeData(selectNode);
         });
     } else {
       const newNodeConfig = cloneDeep(nodeData);
@@ -153,7 +169,7 @@ const ConfigPanel: React.FC = () => {
           },
         )
         .then(() => {
-          resetNodeData();
+          resetNodeData(selectNode);
         });
     }
   };
@@ -178,6 +194,20 @@ const ConfigPanel: React.FC = () => {
             />
           </div>
           <div>
+            <span>x</span>
+            <InputNumber
+              value={nodeData?.x}
+              onChange={(value) => saveData(false, 'x', value)}
+            />
+          </div>
+          <div>
+            <span>y</span>
+            <InputNumber
+              value={nodeData?.y}
+              onChange={(value) => saveData(false, 'y', value)}
+            />
+          </div>
+          <div>
             <span>b</span>
             <Input
               value={nodeData?.data?.b}
@@ -192,7 +222,12 @@ const ConfigPanel: React.FC = () => {
   );
 };
 
-const FormPanel: React.FC = () => {
+interface FormPanelProps {
+  panelRef: React.MutableRefObject<FormPanelRefType>;
+}
+
+const FormPanel: React.FC<FormPanelProps> = (props) => {
+  const { panelRef } = props;
   // const app = useXFlowApp();
   // const [nodeData, setNodeData] = useState<any>();
   // const [selectNode] = useModelAsync<MODELS.SELECTED_NODE.IState>({
@@ -213,7 +248,7 @@ const FormPanel: React.FC = () => {
       position={{ top: 40, right: 0, bottom: 0, width: 290 }}
       className="panel"
     >
-      <ConfigPanel />
+      <ConfigPanel panelRef={panelRef} />
     </WorkspacePanel>
   );
 };

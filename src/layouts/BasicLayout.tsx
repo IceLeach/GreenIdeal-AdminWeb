@@ -74,6 +74,7 @@ const BasicLayout = (props: any) => {
           <Link to={item.path ?? '/'}>{dom}</Link>
         )}
         title={title}
+        // title='IDC机房综合管理平台'
         logo={logo}
         siderWidth={279}
         collapsed={false}

@@ -86,27 +86,33 @@ namespace NSToolbarConfig {
     const toolbarGroup: IToolbarItemOptions[] = [];
     // const history = getGraphHistory()
 
-    // /** 撤销 */
+    /** 撤销 */
     // toolbarGroup.push({
     //   tooltip: '撤销',
     //   iconName: 'UndoOutlined',
     //   id: TOOLBAR_ITEMS.UNDO_CMD,
-    //   isEnabled: history.canUndo(),
-    //   onClick: async () => {
-    //     history.undo()
+    //   isEnabled: state.isUndoable,
+    //   onClick: async ({ commandService, modelService }) => {
+    //     commandService.executeCommand<NsGraphCmd.GraphHistoryUndo.IArgs>(
+    //       XFlowGraphCommands.GRAPH_HISTORY_UNDO.id,
+    //       {},
+    //     );
     //   },
-    // })
+    // });
 
-    // /** 重做 */
+    /** 重做 */
     // toolbarGroup.push({
     //   tooltip: '重做',
     //   iconName: 'RedoOutlined',
     //   id: TOOLBAR_ITEMS.REDO_CMD,
-    //   isEnabled: history.canRedo(),
-    //   onClick: async () => {
-    //     history.redo()
+    //   isEnabled: state.isRedoable,
+    //   onClick: async ({ commandService, modelService }) => {
+    //     commandService.executeCommand<NsGraphCmd.GraphHistoryRedo.IArgs>(
+    //       XFlowGraphCommands.GRAPH_HISTORY_REDO.id,
+    //       {},
+    //     );
     //   },
-    // })
+    // });
 
     /** FRONT_NODE */
     toolbarGroup.push({

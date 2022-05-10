@@ -75,7 +75,7 @@ export const useKeybindingConfig = createKeybindingConfig((config) => {
       },
       {
         id: 'redo',
-        keybinding: ['meta+shift+z', 'ctrl+shift+z'],
+        keybinding: ['meta+y', 'ctrl+y'],
         callback: async function (item, ctx, cmd, e) {
           e.preventDefault();
           cmd.executeCommand<NsGraphCmd.GraphHistoryRedo.IArgs>(

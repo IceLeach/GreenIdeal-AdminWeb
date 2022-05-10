@@ -10,7 +10,7 @@ export default [
       {
         path: '/dashboard',
         component: './home/dashboard',
-        name: '欢迎',
+        name: '系统首页',
         icon: 'home',
       },
       {

@@ -42,7 +42,7 @@ import {
 import { controlMapService, ControlShapeEnum } from './custom-shapes';
 
 import styles from './index.less';
-import FormPanel from './FormPanel';
+import FormPanel, { FormPanelRefType } from './FormPanel';
 import { Cell, Graph } from '@antv/x6';
 import { useCmdConfig } from './config-cmd';
 import { DndNode } from './react-node/dnd-node';
@@ -51,6 +51,7 @@ import { useKeybindingConfig } from './config-keybinding';
 import { useToolbarConfig } from './config-toolbar';
 import 'antd/lib/collapse/style/index';
 import { nodePanel } from './node-panel-config';
+import ToolbarPanel from './ToolbarPanel';
 
 export interface IProps {}
 
@@ -285,6 +286,8 @@ const MapDesigner: React.FC = () => {
 
   const graphRef = useRef<Graph>();
 
+  const formPanelRef = useRef<FormPanelRefType>({});
+
   /** 画布渲染数据 */
   // const [graphData, setGraphData] = useState<NsGraph.IGraphData>()
 
@@ -302,28 +305,46 @@ const MapDesigner: React.FC = () => {
     //     // height,
     //   },
     // });
-    app.executeCommand<NsNodeCmd.AddNode.IArgs>(XFlowNodeCommands.ADD_NODE.id, {
-      nodeConfig: {
-        id: 'node-678e6110-fe81-41b2-8f8c-c5ab06c399ce',
-        x: 230,
-        y: 230,
-        zIndex: 10,
-        renderKey: 'cabinet',
-        label: '',
-        isCustom: true,
-        data: { a: 1, b: '2' },
-        width: 40,
-        height: 40,
-        name: 'cabinet',
+    await app.executeCommand<NsNodeCmd.AddNode.IArgs>(
+      XFlowNodeCommands.ADD_NODE.id,
+      {
+        nodeConfig: {
+          id: 'node-678e6110-fe81-41b2-8f8c-c5ab06c399ce',
+          x: 230,
+          y: 230,
+          zIndex: 10,
+          renderKey: 'cabinet',
+          label: '',
+          isCustom: true,
+          data: { a: 1, b: '2' },
+          width: 40,
+          height: 40,
+          name: 'cabinet',
+        },
       },
-    });
+    );
 
-    // const graph = await app.getGraphInstance();
+    const graph = await app.getGraphInstance();
+    graph.cleanHistory();
+    graph.history.on('add', (args) => console.log('add', args));
+    graph.history.on(
+      'undo',
+      () =>
+        formPanelRef.current.reloadFormPanel &&
+        formPanelRef.current.reloadFormPanel(),
+    );
+    graph.history.on(
+      'redo',
+      () =>
+        formPanelRef.current.reloadFormPanel &&
+        formPanelRef.current.reloadFormPanel(),
+    );
+    // graph.history.on('change', args => console.log('change', args));
     // graph.on('node:click', ({ node }) => {
     //   const nodeData: NsGraph.INodeConfig = node.getData();
     //   message.success(`${nodeData.id}节点被点击了`);
     // });
-    graphRef.current = await app.getGraphInstance();
+    graphRef.current = graph;
   };
 
   return (
@@ -351,13 +372,32 @@ const MapDesigner: React.FC = () => {
           registerNode={nodePanel}
           position={{ width: 290, top: 40, bottom: 0, left: 0 }}
         />
+        <ToolbarPanel graphRef={graphRef} />
         <CanvasToolbar
           className="xflow-workspace-toolbar-top"
           layout="horizontal"
           config={toolbarConfig}
           position={{ top: 0, left: 0, right: 0, bottom: 0 }}
         />
-        <FlowchartCanvas position={{ top: 40, left: 0, right: 0, bottom: 0 }}>
+        <FlowchartCanvas
+          position={{ top: 40, left: 0, right: 0, bottom: 0 }}
+          onConfigChange={(params) =>
+            formPanelRef.current.reloadFormPanel &&
+            formPanelRef.current.reloadFormPanel()
+          }
+          config={{
+            history: {
+              enabled: true,
+              beforeAddCommand(event, args) {
+                if (args?.options) {
+                  console.log('options', args.options);
+                  return true;
+                  // return args.options.ignore !== false
+                }
+              },
+            },
+          }}
+        >
           <CanvasScaleToolbar
             layout="horizontal"
             position={{ top: -40, right: 0 }}
@@ -371,7 +411,7 @@ const MapDesigner: React.FC = () => {
           <CanvasSnapline color="#faad14" />
           <CanvasNodePortTooltip />
         </FlowchartCanvas>
-        <FormPanel />
+        <FormPanel panelRef={formPanelRef} />
         {/* <FlowchartFormPanel
           show={true}
           position={{ width: 290, top: 40, bottom: 0, right: 0 }}

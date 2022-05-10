@@ -2,7 +2,7 @@ import React from 'react';
 import type { NsGraph } from '@antv/xflow';
 
 const NodeText: NsGraph.INodeRender = (props) => {
-  console.log('props', props);
+  // console.log('props', props);
 
   return (
     <div
