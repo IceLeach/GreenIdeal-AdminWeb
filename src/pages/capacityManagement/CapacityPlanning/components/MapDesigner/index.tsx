@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 /** 图核心组件 & 类型定义 */
 import {
   CanvasContextMenu,
@@ -9,6 +9,7 @@ import {
   FlowchartExtension,
   FlowchartFormPanel,
   FlowchartNodePanel,
+  IApplication,
   IAppLoad,
   IconStore,
   IGraphCommandService,
@@ -52,6 +53,7 @@ import { useToolbarConfig } from './config-toolbar';
 import 'antd/lib/collapse/style/index';
 import { nodePanel } from './node-panel-config';
 import ToolbarPanel from './ToolbarPanel';
+import { useHistoryTravel } from 'ahooks';
 
 export interface IProps {}
 
@@ -284,9 +286,45 @@ const MapDesigner: React.FC = () => {
   const menuConfig = useMenuConfig();
   const keybindingConfig = useKeybindingConfig();
 
+  const appRef = useRef<IApplication>();
   const graphRef = useRef<Graph>();
 
   const formPanelRef = useRef<FormPanelRefType>({});
+
+  const { value, setValue, backLength, forwardLength, back, forward, reset } =
+    useHistoryTravel<NsGraph.IGraphData>();
+  const isHistoryActionRef = useRef<boolean>(false);
+  // const [isHistoryAction,setIsHistoryAction]=useState<boolean>(false);
+
+  const setHistory = () => {
+    appRef.current?.executeCommand<NsGraphCmd.SaveGraphData.IArgs>(
+      XFlowGraphCommands.SAVE_GRAPH_DATA.id,
+      {
+        // @ts-ignore
+        saveGraphDataService: (meta, graphData) => {
+          console.log('save', graphData);
+          setValue(graphData);
+          return null;
+        },
+      },
+    );
+  };
+
+  useEffect(() => {
+    console.log('value', value, isHistoryActionRef.current);
+    if (isHistoryActionRef.current) {
+      console.log('reload');
+      appRef.current
+        ?.executeCommand(XFlowGraphCommands.GRAPH_RENDER.id, {
+          graphData: value,
+        })
+        .then(() => {
+          isHistoryActionRef.current = false;
+          formPanelRef.current.reloadFormPanel &&
+            formPanelRef.current.reloadFormPanel();
+        });
+    }
+  }, [value]);
 
   /** 画布渲染数据 */
   // const [graphData, setGraphData] = useState<NsGraph.IGraphData>()
@@ -305,14 +343,14 @@ const MapDesigner: React.FC = () => {
     //     // height,
     //   },
     // });
-    await app.executeCommand<NsNodeCmd.AddNode.IArgs>(
-      XFlowNodeCommands.ADD_NODE.id,
-      {
-        nodeConfig: {
+    appRef.current = app;
+    const graphData = {
+      nodes: [
+        {
           id: 'node-678e6110-fe81-41b2-8f8c-c5ab06c399ce',
           x: 230,
           y: 230,
-          zIndex: 10,
+          zIndex: 11,
           renderKey: 'cabinet',
           label: '',
           isCustom: true,
@@ -321,24 +359,49 @@ const MapDesigner: React.FC = () => {
           height: 40,
           name: 'cabinet',
         },
-      },
-    );
+      ],
+      edges: [],
+    };
+    reset(graphData);
+    await app.executeCommand(XFlowGraphCommands.GRAPH_RENDER.id, {
+      graphData,
+    });
 
     const graph = await app.getGraphInstance();
-    graph.cleanHistory();
-    graph.history.on('add', (args) => console.log('add', args));
-    graph.history.on(
-      'undo',
-      () =>
-        formPanelRef.current.reloadFormPanel &&
-        formPanelRef.current.reloadFormPanel(),
-    );
-    graph.history.on(
-      'redo',
-      () =>
-        formPanelRef.current.reloadFormPanel &&
-        formPanelRef.current.reloadFormPanel(),
-    );
+    graph.on('cell:added', (data) => {
+      console.log('added', data);
+      if (!isHistoryActionRef.current) setHistory();
+    });
+    graph.on('cell:removed', (data) => {
+      console.log('removed', data);
+      if (!isHistoryActionRef.current) setHistory();
+    });
+    graph.on('cell:change:data', (data) => {
+      console.log('changed', data);
+      if (!isHistoryActionRef.current) setHistory();
+    });
+    graph.on('cell:change:zIndex', (data) => {
+      console.log('zIndex', data);
+      formPanelRef.current.updateFormPanel &&
+        formPanelRef.current.updateFormPanel(false, 'zIndex', data.current);
+      // if (!isHistoryActionRef.current) setHistory()
+    });
+    // graph.cleanHistory();
+    // graph.history.on('add', (args) => console.log('add', args));
+    // graph.history.on(
+    //   'undo',
+    //   (args) => {
+    //     console.log('undo', args)
+    //     formPanelRef.current.reloadFormPanel &&
+    //       formPanelRef.current.reloadFormPanel()
+    //   },
+    // );
+    // graph.history.on(
+    //   'redo',
+    //   () =>
+    //     formPanelRef.current.reloadFormPanel &&
+    //     formPanelRef.current.reloadFormPanel(),
+    // );
     // graph.history.on('change', args => console.log('change', args));
     // graph.on('node:click', ({ node }) => {
     //   const nodeData: NsGraph.INodeConfig = node.getData();
@@ -372,7 +435,14 @@ const MapDesigner: React.FC = () => {
           registerNode={nodePanel}
           position={{ width: 290, top: 40, bottom: 0, left: 0 }}
         />
-        <ToolbarPanel graphRef={graphRef} />
+        <ToolbarPanel
+          graphRef={graphRef}
+          undoFn={back}
+          redoFn={forward}
+          undoLength={backLength}
+          redoLength={forwardLength}
+          isHistoryActionRef={isHistoryActionRef}
+        />
         <CanvasToolbar
           className="xflow-workspace-toolbar-top"
           layout="horizontal"
@@ -381,21 +451,10 @@ const MapDesigner: React.FC = () => {
         />
         <FlowchartCanvas
           position={{ top: 40, left: 0, right: 0, bottom: 0 }}
-          onConfigChange={(params) =>
+          onConfigChange={(params) => {
+            // setHistory();
             formPanelRef.current.reloadFormPanel &&
-            formPanelRef.current.reloadFormPanel()
-          }
-          config={{
-            history: {
-              enabled: true,
-              beforeAddCommand(event, args) {
-                if (args?.options) {
-                  console.log('options', args.options);
-                  return true;
-                  // return args.options.ignore !== false
-                }
-              },
-            },
+              formPanelRef.current.reloadFormPanel();
           }}
         >
           <CanvasScaleToolbar

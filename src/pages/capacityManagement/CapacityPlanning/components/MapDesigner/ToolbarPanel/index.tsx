@@ -5,18 +5,38 @@ import { Graph } from '@antv/x6';
 
 interface ActionsPanelProps {
   graphRef: React.MutableRefObject<Graph | undefined>;
+  undoFn: () => void;
+  redoFn: () => void;
+  undoLength: number;
+  redoLength: number;
+  isHistoryActionRef: React.MutableRefObject<boolean>;
 }
 
 const ActionsPanel: React.FC<ActionsPanelProps> = (props) => {
-  const { graphRef } = props;
+  const {
+    graphRef,
+    undoFn,
+    redoFn,
+    undoLength,
+    redoLength,
+    isHistoryActionRef,
+  } = props;
 
   const undo = () => {
-    const canUndo = graphRef.current?.canUndo();
-    console.log('canUndo', canUndo);
+    // const canUndo = graphRef.current?.canUndo();
+    console.log('canUndo', undoLength);
+    if (undoLength) {
+      isHistoryActionRef.current = true;
+      undoFn();
+    }
   };
   const redo = () => {
-    const canRedo = graphRef.current?.canRedo();
-    console.log('canRedo', canRedo);
+    // const canRedo = graphRef.current?.canRedo();
+    console.log('canRedo', redoLength);
+    if (redoLength) {
+      isHistoryActionRef.current = true;
+      redoFn();
+    }
   };
 
   return (
@@ -29,17 +49,20 @@ const ActionsPanel: React.FC<ActionsPanelProps> = (props) => {
 
 interface ToolbarPanelProps {
   graphRef: React.MutableRefObject<Graph | undefined>;
+  undoFn: () => void;
+  redoFn: () => void;
+  undoLength: number;
+  redoLength: number;
+  isHistoryActionRef: React.MutableRefObject<boolean>;
 }
 
 const ToolbarPanel: React.FC<ToolbarPanelProps> = (props) => {
-  const { graphRef } = props;
-
   return (
     <WorkspacePanel
       position={{ top: 40, left: 290, bottom: 0, width: 80, height: 30 }}
       className="panel"
     >
-      <ActionsPanel graphRef={graphRef} />
+      <ActionsPanel {...props} />
     </WorkspacePanel>
   );
 };

@@ -76,7 +76,8 @@ const BasicLayout = (props: any) => {
         title={title}
         // title='IDC机房综合管理平台'
         logo={logo}
-        siderWidth={279}
+        // siderWidth={279}
+        siderWidth={250}
         collapsed={false}
         // collapsedButtonRender={() => <></>}
         rightContentRender={() => (

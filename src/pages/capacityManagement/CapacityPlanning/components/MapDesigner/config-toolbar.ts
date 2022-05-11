@@ -149,60 +149,60 @@ namespace NSToolbarConfig {
     });
 
     /** 开启框选 */
-    toolbarGroup.push({
-      tooltip: '开启框选',
-      iconName: 'GatewayOutlined',
-      id: TOOLBAR_ITEMS.MULTI_SELECT,
-      active: state.isMultiSelectionActive,
-      onClick: async ({ commandService }) => {
-        commandService.executeCommand<NsGraphCmd.GraphToggleMultiSelect.IArgs>(
-          TOOLBAR_ITEMS.MULTI_SELECT,
-          {},
-        );
-      },
-    });
+    // toolbarGroup.push({
+    //   tooltip: '开启框选',
+    //   iconName: 'GatewayOutlined',
+    //   id: TOOLBAR_ITEMS.MULTI_SELECT,
+    //   active: state.isMultiSelectionActive,
+    //   onClick: async ({ commandService }) => {
+    //     commandService.executeCommand<NsGraphCmd.GraphToggleMultiSelect.IArgs>(
+    //       TOOLBAR_ITEMS.MULTI_SELECT,
+    //       {},
+    //     );
+    //   },
+    // });
 
     /** 新建群组 */
-    toolbarGroup.push({
-      tooltip: '新建群组',
-      iconName: 'GroupOutlined',
-      id: TOOLBAR_ITEMS.ADD_GROUP,
-      isEnabled: state.isNodeSelected,
-      onClick: async ({ commandService, modelService }) => {
-        const cells = await MODELS.SELECTED_CELLS.useValue(modelService);
-        const groupChildren = cells.map((cell) => cell.id);
-        commandService.executeCommand<NsGroupCmd.AddGroup.IArgs>(
-          TOOLBAR_ITEMS.ADD_GROUP,
-          {
-            nodeConfig: {
-              id: uuidv4(),
-              renderKey: GROUP_NODE_RENDER_ID,
-              groupChildren,
-              groupCollapsedSize: { width: 200, height: 40 },
-              label: '新建群组',
-            },
-          },
-        );
-      },
-    });
+    // toolbarGroup.push({
+    //   tooltip: '新建群组',
+    //   iconName: 'GroupOutlined',
+    //   id: TOOLBAR_ITEMS.ADD_GROUP,
+    //   isEnabled: state.isNodeSelected,
+    //   onClick: async ({ commandService, modelService }) => {
+    //     const cells = await MODELS.SELECTED_CELLS.useValue(modelService);
+    //     const groupChildren = cells.map((cell) => cell.id);
+    //     commandService.executeCommand<NsGroupCmd.AddGroup.IArgs>(
+    //       TOOLBAR_ITEMS.ADD_GROUP,
+    //       {
+    //         nodeConfig: {
+    //           id: uuidv4(),
+    //           renderKey: GROUP_NODE_RENDER_ID,
+    //           groupChildren,
+    //           groupCollapsedSize: { width: 200, height: 40 },
+    //           label: '新建群组',
+    //         },
+    //       },
+    //     );
+    //   },
+    // });
 
     /** 解散群组 */
-    toolbarGroup.push({
-      tooltip: '解散群组',
-      iconName: 'UngroupOutlined',
-      id: TOOLBAR_ITEMS.DEL_GROUP,
-      isEnabled: state.isGroupSelected,
-      onClick: async ({ commandService, modelService }) => {
-        const cell = await MODELS.SELECTED_NODE.useValue(modelService);
-        const nodeConfig = cell.getData();
-        commandService.executeCommand<NsGroupCmd.AddGroup.IArgs>(
-          XFlowGroupCommands.DEL_GROUP.id,
-          {
-            nodeConfig: nodeConfig,
-          },
-        );
-      },
-    });
+    // toolbarGroup.push({
+    //   tooltip: '解散群组',
+    //   iconName: 'UngroupOutlined',
+    //   id: TOOLBAR_ITEMS.DEL_GROUP,
+    //   isEnabled: state.isGroupSelected,
+    //   onClick: async ({ commandService, modelService }) => {
+    //     const cell = await MODELS.SELECTED_NODE.useValue(modelService);
+    //     const nodeConfig = cell.getData();
+    //     commandService.executeCommand<NsGroupCmd.AddGroup.IArgs>(
+    //       XFlowGroupCommands.DEL_GROUP.id,
+    //       {
+    //         nodeConfig: nodeConfig,
+    //       },
+    //     );
+    //   },
+    // });
 
     /** 保存数据 */
     toolbarGroup.push({
@@ -213,6 +213,7 @@ namespace NSToolbarConfig {
         commandService.executeCommand<NsGraphCmd.SaveGraphData.IArgs>(
           TOOLBAR_ITEMS.SAVE_GRAPH_DATA,
           {
+            // @ts-ignore
             saveGraphDataService: (meta, graphData) => {
               console.log(graphData);
               return null;

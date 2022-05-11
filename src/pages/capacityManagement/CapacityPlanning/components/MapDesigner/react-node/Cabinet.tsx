@@ -13,6 +13,7 @@ const Cabinet: NsGraph.INodeRender = (props) => {
         width: props.data.width,
         height: props.data.height,
         background: '#9ca0a3',
+        border: '1px solid #fff',
       }}
     >
       {props.data.label}

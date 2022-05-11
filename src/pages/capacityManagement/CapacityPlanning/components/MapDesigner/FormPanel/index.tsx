@@ -106,7 +106,7 @@ import { cloneDeep, set } from 'lodash';
 // };
 
 export interface FormPanelRefType {
-  updateFormPanel?: (config: any) => void;
+  updateFormPanel?: (isData: boolean, key: string, value: any) => void;
   reloadFormPanel?: () => void;
 }
 
@@ -132,21 +132,23 @@ const ConfigPanel: React.FC<ConfigPanelProps> = (props) => {
       setNodeData(nodeConfig);
     }
   };
-  const updateNodeData = (config: any) => {
-    console.log('config', config);
-    setNodeData(config);
-  };
+  // const updateNodeData = (config: any) => {
+  //   console.log('config', config);
+  //   setNodeData(config);
+  // };
 
-  useEffect(() => {
-    panelRef.current.updateFormPanel = updateNodeData;
-    panelRef.current.reloadFormPanel = () => resetNodeData(selectNode);
-    resetNodeData(selectNode);
-  }, [selectNode]);
-
-  const saveData = (isData: boolean, key: string, value: any) => {
+  const saveData = (
+    selectedNode: any,
+    isData: boolean,
+    key: string,
+    value: any,
+  ) => {
+    // @ts-ignore
+    const nodeConfig = selectedNode.getData();
     if (isData) {
       // const nodeConfig = selectNode!.getData();
-      const newNodeConfig = cloneDeep(nodeData);
+      const newNodeConfig = cloneDeep(nodeConfig);
+      console.log('newNodeConfig', newNodeConfig);
       set(newNodeConfig.data, key, value);
       app.commandService
         .executeCommand<NsNodeCmd.UpdateNode.IArgs>(
@@ -159,7 +161,7 @@ const ConfigPanel: React.FC<ConfigPanelProps> = (props) => {
           resetNodeData(selectNode);
         });
     } else {
-      const newNodeConfig = cloneDeep(nodeData);
+      const newNodeConfig = cloneDeep(nodeConfig);
       set(newNodeConfig, key, value);
       app.commandService
         .executeCommand<NsNodeCmd.UpdateNode.IArgs>(
@@ -174,6 +176,16 @@ const ConfigPanel: React.FC<ConfigPanelProps> = (props) => {
     }
   };
 
+  useEffect(() => {
+    panelRef.current.updateFormPanel = (
+      isData: boolean,
+      key: string,
+      value: any,
+    ) => saveData(selectNode, isData, key, value);
+    panelRef.current.reloadFormPanel = () => resetNodeData(selectNode);
+    resetNodeData(selectNode);
+  }, [selectNode]);
+
   return (
     <div>
       <div>设置</div>
@@ -183,35 +195,35 @@ const ConfigPanel: React.FC<ConfigPanelProps> = (props) => {
             <span>width</span>
             <InputNumber
               value={nodeData?.width}
-              onChange={(value) => saveData(false, 'width', value)}
+              onChange={(value) => saveData(selectNode, false, 'width', value)}
             />
           </div>
           <div>
             <span>height</span>
             <InputNumber
               value={nodeData?.height}
-              onChange={(value) => saveData(false, 'height', value)}
+              onChange={(value) => saveData(selectNode, false, 'height', value)}
             />
           </div>
           <div>
             <span>x</span>
             <InputNumber
               value={nodeData?.x}
-              onChange={(value) => saveData(false, 'x', value)}
+              onChange={(value) => saveData(selectNode, false, 'x', value)}
             />
           </div>
           <div>
             <span>y</span>
             <InputNumber
               value={nodeData?.y}
-              onChange={(value) => saveData(false, 'y', value)}
+              onChange={(value) => saveData(selectNode, false, 'y', value)}
             />
           </div>
           <div>
             <span>b</span>
             <Input
               value={nodeData?.data?.b}
-              onChange={(e) => saveData(true, 'b', e.target.value)}
+              onChange={(e) => saveData(selectNode, true, 'b', e.target.value)}
             />
           </div>
         </div>
