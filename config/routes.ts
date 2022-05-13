@@ -13,13 +13,13 @@ export default [
         name: '系统首页',
         icon: 'home',
       },
-      {
-        path: '/page1',
-        exact: true,
-        component: './home/page1',
-        name: '展示页',
-        icon: 'history',
-      },
+      // {
+      //   path: '/page1',
+      //   exact: true,
+      //   component: './home/page1',
+      //   name: '展示页',
+      //   icon: 'history',
+      // },
       {
         path: '/assetManagement',
         redirect: '/assetManagement/rooms',
@@ -202,7 +202,7 @@ export default [
             name: '权限管理',
           },
           {
-            path: '/systemManagement/configurationManagement',
+            path: '/systemManagement/configManagement',
             // component: '',
             name: '配置管理',
           },
@@ -210,6 +210,11 @@ export default [
             path: '/systemManagement/enumerationManagement',
             // component: '',
             name: '枚举管理',
+          },
+          {
+            path: '/systemManagement/configurationManagement',
+            // component: '',
+            name: '组态管理',
           },
           { component: './404' },
         ],

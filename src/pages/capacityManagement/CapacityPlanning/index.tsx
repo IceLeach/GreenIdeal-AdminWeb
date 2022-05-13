@@ -86,17 +86,19 @@ const CapacityPlanning: React.FC = () => {
           }}
           activeKey={activeNode ? [activeNode.key] : []}
           placeholder="请输入资产名称"
-          style={{ height: 500 }}
+          style={{ height: 350 }}
         />
-        <div style={{ height: 500 }}>
-          <div style={{ borderTop: '1px solid' }}>待部署设备</div>
-          <div>
-            {!activeNode || activeNode.type === 'map' ? (
-              ''
-            ) : (
-              <DragBox boxData={dragList} setDraggingItem={setDraggingItem} />
-            )}
-          </div>
+        <div style={{ height: 'calc(100% - 350px)' }}>
+          {!activeNode || activeNode.type === 'map' ? (
+            ''
+          ) : (
+            <>
+              <div style={{ borderTop: '1px solid' }}>待部署设备</div>
+              <div>
+                <DragBox boxData={dragList} setDraggingItem={setDraggingItem} />
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className={styles.rightContent}>

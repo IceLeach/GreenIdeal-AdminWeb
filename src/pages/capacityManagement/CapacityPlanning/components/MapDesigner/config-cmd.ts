@@ -1,6 +1,9 @@
 import { createCmdConfig, DisposableCollection, uuidv4 } from '@antv/xflow';
 
-const defaultNodeData = [{ name: 'cabinet', data: { a: 0, b: '0' } }];
+const defaultNodeData = [
+  { name: 'cabinet', data: { a: 0, b: '0', hasLabel: false } },
+  { name: 'text', data: { hasLabel: true } },
+];
 
 export const useCmdConfig = createCmdConfig((config) => {
   config.setRegisterHookFn((hooks) => {

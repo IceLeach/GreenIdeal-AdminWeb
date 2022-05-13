@@ -1,3 +1,4 @@
+/** antd主题色 Less全局变量 */
 export default {
   // The prefix to use on all css classes from ant.
   // 'ant-prefix': '',
@@ -40,6 +41,9 @@ export default {
   'select-border-color': '#D9D9D9',
   // 'select-dropdown-bg': 'rgba(48, 62, 117, 0.6)',
   // 'select-background': 'rgba(48, 62, 117, 0.6)',
+
+  // Drawer
+  'drawer-bg': '#303E75',
 
   // Popover
   // 'popover-bg': 'rgba(48, 62, 117, 0.6)',

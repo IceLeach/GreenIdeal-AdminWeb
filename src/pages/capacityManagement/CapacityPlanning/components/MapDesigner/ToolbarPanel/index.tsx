@@ -59,7 +59,7 @@ interface ToolbarPanelProps {
 const ToolbarPanel: React.FC<ToolbarPanelProps> = (props) => {
   return (
     <WorkspacePanel
-      position={{ top: 40, left: 290, bottom: 0, width: 80, height: 30 }}
+      position={{ top: 40, left: 20, bottom: 0, width: 50, height: 25 }}
       className="panel"
     >
       <ActionsPanel {...props} />

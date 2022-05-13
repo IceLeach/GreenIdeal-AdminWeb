@@ -106,8 +106,11 @@ import { cloneDeep, set } from 'lodash';
 // };
 
 export interface FormPanelRefType {
+  /** 修改选中节点属性 */
   updateFormPanel?: (isData: boolean, key: string, value: any) => void;
+  /** 刷新选中节点的数据 */
   reloadFormPanel?: () => void;
+  selectNode?: any;
 }
 
 interface ConfigPanelProps {
@@ -183,6 +186,7 @@ const ConfigPanel: React.FC<ConfigPanelProps> = (props) => {
       value: any,
     ) => saveData(selectNode, isData, key, value);
     panelRef.current.reloadFormPanel = () => resetNodeData(selectNode);
+    panelRef.current.selectNode = selectNode;
     resetNodeData(selectNode);
   }, [selectNode]);
 

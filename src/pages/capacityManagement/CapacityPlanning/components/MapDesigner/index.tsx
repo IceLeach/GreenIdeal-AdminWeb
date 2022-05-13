@@ -32,7 +32,7 @@ import { CanvasMiniMap, CanvasScaleToolbar, CanvasSnapline } from '@antv/xflow';
 import { useGraphConfig } from './config-graph';
 import { message } from 'antd';
 import * as panelConfig from './dnd-panel-config';
-import { cloneDeep, set } from 'lodash';
+import { cloneDeep, isEqual, set } from 'lodash';
 
 import '@antv/xflow/dist/index.css';
 import {
@@ -54,218 +54,217 @@ import 'antd/lib/collapse/style/index';
 import { nodePanel } from './node-panel-config';
 import ToolbarPanel from './ToolbarPanel';
 import { useHistoryTravel } from 'ahooks';
+import KeyBindingsPanel from './KeyBindingsPanel';
 
 export interface IProps {}
 
-const originFormData = ['width', 'height'];
+// namespace NsJsonForm {
+//   /** ControlShape的Enum */
+//   const { ControlShape } = NsJsonSchemaForm;
 
-namespace NsJsonForm {
-  /** ControlShape的Enum */
-  const { ControlShape } = NsJsonSchemaForm;
+//   /** 保存form的values */
+//   export const formValueUpdateService: NsJsonSchemaForm.IFormValueUpdateService =
+//     async (args) => {
+//       console.log('update', args);
+//       const { values, commandService, targetData } = args;
+//       const updateNode = (node: NsGraph.INodeConfig) => {
+//         return commandService.executeCommand<NsNodeCmd.UpdateNode.IArgs>(
+//           XFlowNodeCommands.UPDATE_NODE.id,
+//           { nodeConfig: node },
+//         );
+//       };
+//       console.log('formValueUpdateService  values:', values, args);
+//       // @ts-ignore
+//       // const nodeConfig: NsGraph.INodeConfig = {
+//       //   ...targetData,
+//       // };
+//       const nodeConfig: NsGraph.INodeConfig = cloneDeep(targetData);
+//       values.forEach((val) => {
+//         // set(nodeConfig, val.name, val.value);
+//         // if (originFormData.includes(val.name[0])) {
+//         set(nodeConfig, val.name, val.value);
+//         // } else {
+//         //   set(nodeConfig.data, val.name, val.value);
+//         // }
+//       });
+//       updateNode(nodeConfig);
+//     };
 
-  /** 保存form的values */
-  export const formValueUpdateService: NsJsonSchemaForm.IFormValueUpdateService =
-    async (args) => {
-      console.log('update', args);
-      const { values, commandService, targetData } = args;
-      const updateNode = (node: NsGraph.INodeConfig) => {
-        return commandService.executeCommand<NsNodeCmd.UpdateNode.IArgs>(
-          XFlowNodeCommands.UPDATE_NODE.id,
-          { nodeConfig: node },
-        );
-      };
-      console.log('formValueUpdateService  values:', values, args);
-      // @ts-ignore
-      // const nodeConfig: NsGraph.INodeConfig = {
-      //   ...targetData,
-      // };
-      const nodeConfig: NsGraph.INodeConfig = cloneDeep(targetData);
-      values.forEach((val) => {
-        // set(nodeConfig, val.name, val.value);
-        // if (originFormData.includes(val.name[0])) {
-        set(nodeConfig, val.name, val.value);
-        // } else {
-        //   set(nodeConfig.data, val.name, val.value);
-        // }
-      });
-      updateNode(nodeConfig);
-    };
+//   /** 根据选中的节点更新formSchema */
+//   export const formSchemaService: NsJsonSchemaForm.IFormSchemaService = async (
+//     args,
+//   ) => {
+//     const { targetData } = args;
+//     console.log(`formSchemaService args:`, args);
+//     if (!targetData) {
+//       return {
+//         tabs: [
+//           {
+//             /** Tab的title */
+//             name: '画布配置',
+//             groups: [],
+//           },
+//         ],
+//       };
+//     }
 
-  /** 根据选中的节点更新formSchema */
-  export const formSchemaService: NsJsonSchemaForm.IFormSchemaService = async (
-    args,
-  ) => {
-    const { targetData } = args;
-    console.log(`formSchemaService args:`, args);
-    if (!targetData) {
-      return {
-        tabs: [
-          {
-            /** Tab的title */
-            name: '画布配置',
-            groups: [],
-          },
-        ],
-      };
-    }
+//     if (targetData.renderKey === 'CABINET') {
+//       return {
+//         tabs: [
+//           {
+//             /** Tab的title */
+//             name: '节点配置',
+//             groups: [
+//               {
+//                 name: 'group1',
+//                 controls: [
+//                   {
+//                     name: 'width',
+//                     label: '宽度',
+//                     shape: ControlShapeEnum.INPUTNUMBER,
+//                     value: targetData.width,
+//                   },
+//                   {
+//                     name: 'height',
+//                     label: '高度',
+//                     shape: ControlShapeEnum.INPUTNUMBER,
+//                     value: targetData.height,
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       };
+//     }
 
-    if (targetData.renderKey === 'CABINET') {
-      return {
-        tabs: [
-          {
-            /** Tab的title */
-            name: '节点配置',
-            groups: [
-              {
-                name: 'group1',
-                controls: [
-                  {
-                    name: 'width',
-                    label: '宽度',
-                    shape: ControlShapeEnum.INPUTNUMBER,
-                    value: targetData.width,
-                  },
-                  {
-                    name: 'height',
-                    label: '高度',
-                    shape: ControlShapeEnum.INPUTNUMBER,
-                    value: targetData.height,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      };
-    }
+//     return {
+//       /** 配置一个Tab */
+//       tabs: [
+//         {
+//           /** Tab的title */
+//           name: '节点配置',
+//           groups: [
+//             {
+//               name: 'group1',
+//               controls: [
+//                 {
+//                   name: 'label',
+//                   label: '节点Label',
+//                   shape: ControlShape.INPUT,
+//                   value: targetData.label,
+//                 },
+//                 {
+//                   name: 'x',
+//                   label: 'x',
+//                   shape: ControlShape.FLOAT,
+//                   value: targetData.x,
+//                 },
+//                 {
+//                   name: 'y',
+//                   label: 'y',
+//                   shape: ControlShape.FLOAT,
+//                   value: targetData.y,
+//                 },
+//               ],
+//             },
+//           ],
+//         },
+//       ],
+//     };
+//   };
+// }
 
-    return {
-      /** 配置一个Tab */
-      tabs: [
-        {
-          /** Tab的title */
-          name: '节点配置',
-          groups: [
-            {
-              name: 'group1',
-              controls: [
-                {
-                  name: 'label',
-                  label: '节点Label',
-                  shape: ControlShape.INPUT,
-                  value: targetData.label,
-                },
-                {
-                  name: 'x',
-                  label: 'x',
-                  shape: ControlShape.FLOAT,
-                  value: targetData.x,
-                },
-                {
-                  name: 'y',
-                  label: 'y',
-                  shape: ControlShape.FLOAT,
-                  value: targetData.y,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-  };
-}
+// const formSchemaService: (args: {
+//   cell: Cell;
+//   targetType: NsJsonSchemaForm.TargetType;
+//   targetData: NsJsonSchemaForm.TargetData;
+//   modelService: IModelService;
+//   commandService: IGraphCommandService;
+// }) => Promise<NsJsonSchemaForm.ISchema> = async (args) => {
+//   const { targetType } = args;
+//   const isGroup = args.targetData?.isGroup;
+//   const nodeSchema = {
+//     tabs: [
+//       {
+//         name: '设置',
+//         groups: [
+//           {
+//             name: 'groupName',
+//             controls: [
+//               {
+//                 label: '节点名',
+//                 name: '自定义form',
+//                 shape: 'rename-service',
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//     ],
+//   };
+//   if (isGroup) {
+//     // TODO
+//   }
+//   if (targetType === 'edge') {
+//     // TODO
+//   }
+//   if (targetType === 'node') {
+//     return nodeSchema;
+//   }
+//   return {
+//     tabs: [
+//       {
+//         name: '设置',
+//         groups: [
+//           {
+//             name: 'groupName',
+//             controls: [
+//               {
+//                 label: '',
+//                 name: 'canvas-service',
+//                 shape: 'canvas-service',
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//     ],
+//   };
+// };
 
-const formSchemaService: (args: {
-  cell: Cell;
-  targetType: NsJsonSchemaForm.TargetType;
-  targetData: NsJsonSchemaForm.TargetData;
-  modelService: IModelService;
-  commandService: IGraphCommandService;
-}) => Promise<NsJsonSchemaForm.ISchema> = async (args) => {
-  const { targetType } = args;
-  const isGroup = args.targetData?.isGroup;
-  const nodeSchema = {
-    tabs: [
-      {
-        name: '设置',
-        groups: [
-          {
-            name: 'groupName',
-            controls: [
-              {
-                label: '节点名',
-                name: '自定义form',
-                shape: 'rename-service',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-  if (isGroup) {
-    // TODO
-  }
-  if (targetType === 'edge') {
-    // TODO
-  }
-  if (targetType === 'node') {
-    return nodeSchema;
-  }
-  return {
-    tabs: [
-      {
-        name: '设置',
-        groups: [
-          {
-            name: 'groupName',
-            controls: [
-              {
-                label: '',
-                name: 'canvas-service',
-                shape: 'canvas-service',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-};
+// namespace NsConfig {
+//   /** 注册icon 类型 */
+//   IconStore.set('PlusCircleOutlined', PlusCircleOutlined);
+//   IconStore.set('DeleteOutlined', DeleteOutlined);
+//   IconStore.set('SaveOutlined', SaveOutlined);
+//   /** nodeId */
+//   let id = 1;
+//   /** 获取toobar配置项 */
+//   export const getToolbarItems = async () => {
+//     const toolbarGroup2: IToolbarItemOptions[] = [];
 
-namespace NsConfig {
-  /** 注册icon 类型 */
-  IconStore.set('PlusCircleOutlined', PlusCircleOutlined);
-  IconStore.set('DeleteOutlined', DeleteOutlined);
-  IconStore.set('SaveOutlined', SaveOutlined);
-  /** nodeId */
-  let id = 1;
-  /** 获取toobar配置项 */
-  export const getToolbarItems = async () => {
-    const toolbarGroup2: IToolbarItemOptions[] = [];
+//     /** 保存数据 */
+//     toolbarGroup2.push({
+//       id: XFlowGraphCommands.SAVE_GRAPH_DATA.id,
+//       iconName: 'SaveOutlined',
+//       tooltip: '保存数据',
+//       onClick: async ({ commandService }) => {
+//         commandService.executeCommand<NsGraphCmd.SaveGraphData.IArgs>(
+//           XFlowGraphCommands.SAVE_GRAPH_DATA.id,
+//           {
+//             saveGraphDataService: async (meta, data) => {
+//               console.log('save', data);
+//               message.success('nodes count:' + data.nodes.length);
+//             },
+//           },
+//         );
+//       },
+//     });
 
-    /** 保存数据 */
-    toolbarGroup2.push({
-      id: XFlowGraphCommands.SAVE_GRAPH_DATA.id,
-      iconName: 'SaveOutlined',
-      tooltip: '保存数据',
-      onClick: async ({ commandService }) => {
-        commandService.executeCommand<NsGraphCmd.SaveGraphData.IArgs>(
-          XFlowGraphCommands.SAVE_GRAPH_DATA.id,
-          {
-            saveGraphDataService: async (meta, data) => {
-              console.log('save', data);
-              message.success('nodes count:' + data.nodes.length);
-            },
-          },
-        );
-      },
-    });
-
-    return [{ name: 'graphGroup', items: toolbarGroup2 }];
-  };
-}
+//     return [{ name: 'graphGroup', items: toolbarGroup2 }];
+//   };
+// }
 
 // const useToolbarConfig = createToolbarConfig((toolbarConfig) => {
 //   /** 生产 toolbar item */
@@ -277,6 +276,13 @@ namespace NsConfig {
 //   });
 // });
 
+export interface HistoryData {
+  undoFn: () => void;
+  redoFn: () => void;
+  undoLength: number;
+  redoLength: number;
+}
+
 const MapDesigner: React.FC = () => {
   const toolbarConfig = useToolbarConfig();
   /** 画布配置 */
@@ -286,16 +292,29 @@ const MapDesigner: React.FC = () => {
   const menuConfig = useMenuConfig();
   const keybindingConfig = useKeybindingConfig();
 
+  /** 全局app */
   const appRef = useRef<IApplication>();
+  /** 全局graph */
   const graphRef = useRef<Graph>();
-
+  /** 设置区的操作 */
   const formPanelRef = useRef<FormPanelRefType>({});
 
   const { value, setValue, backLength, forwardLength, back, forward, reset } =
     useHistoryTravel<NsGraph.IGraphData>();
+  /** 是否正在执行撤销重做 */
   const isHistoryActionRef = useRef<boolean>(false);
-  // const [isHistoryAction,setIsHistoryAction]=useState<boolean>(false);
+  const historyRef = useRef<HistoryData>();
 
+  useEffect(() => {
+    historyRef.current = {
+      undoFn: back,
+      redoFn: forward,
+      undoLength: backLength,
+      redoLength: forwardLength,
+    };
+  }, [backLength, forwardLength, back, forward]);
+
+  /** undo入栈 */
   const setHistory = () => {
     appRef.current?.executeCommand<NsGraphCmd.SaveGraphData.IArgs>(
       XFlowGraphCommands.SAVE_GRAPH_DATA.id,
@@ -310,6 +329,7 @@ const MapDesigner: React.FC = () => {
     );
   };
 
+  // 撤销重做后重新渲染
   useEffect(() => {
     console.log('value', value, isHistoryActionRef.current);
     if (isHistoryActionRef.current) {
@@ -317,6 +337,17 @@ const MapDesigner: React.FC = () => {
       appRef.current
         ?.executeCommand(XFlowGraphCommands.GRAPH_RENDER.id, {
           graphData: value,
+          // zIndex属性特殊处理
+          isNodeEqual: (
+            curNodeConfig: NsGraph.INodeConfig,
+            nextNodeConfig: NsGraph.INodeConfig,
+          ) => {
+            if (curNodeConfig.zIndex !== nextNodeConfig.zIndex) {
+              const cell = graphRef.current?.getCellById(curNodeConfig.id);
+              cell?.setZIndex(nextNodeConfig.zIndex);
+            }
+            return isEqual(curNodeConfig, nextNodeConfig);
+          },
         })
         .then(() => {
           isHistoryActionRef.current = false;
@@ -326,23 +357,8 @@ const MapDesigner: React.FC = () => {
     }
   }, [value]);
 
-  /** 画布渲染数据 */
-  // const [graphData, setGraphData] = useState<NsGraph.IGraphData>()
-
   /** XFlow初始化完成的回调 */
   const onLoad: IAppLoad = async (app) => {
-    // app.executeCommand<NsNodeCmd.AddNode.IArgs>(XFlowNodeCommands.ADD_NODE.id, {
-    //   nodeConfig: {
-    //     id: 'node1',
-    //     x: 450,
-    //     y: 250,
-    //     label: 'Hello World 1',
-    //     renderKey: 'MYNODE',
-    //     data: { p: '1', z: '2' },
-    //     // width,
-    //     // height,
-    //   },
-    // });
     appRef.current = app;
     const graphData = {
       nodes: [
@@ -354,7 +370,20 @@ const MapDesigner: React.FC = () => {
           renderKey: 'cabinet',
           label: '',
           isCustom: true,
-          data: { a: 1, b: '2' },
+          data: { a: 1, b: '2', hasLabel: false },
+          width: 40,
+          height: 40,
+          name: 'cabinet',
+        },
+        {
+          id: 'node-678e6110-fe81-41b2-8f8c-c5ab06c399ca',
+          x: 250,
+          y: 230,
+          zIndex: 10,
+          renderKey: 'cabinet',
+          label: '',
+          isCustom: true,
+          data: { a: 1, b: '2', hasLabel: false },
           width: 40,
           height: 40,
           name: 'cabinet',
@@ -362,15 +391,28 @@ const MapDesigner: React.FC = () => {
       ],
       edges: [],
     };
+
+    // 初始化
     reset(graphData);
     await app.executeCommand(XFlowGraphCommands.GRAPH_RENDER.id, {
       graphData,
     });
-
     const graph = await app.getGraphInstance();
+
+    // 记录操作，XFlow自带的撤销重做有bug
     graph.on('cell:added', (data) => {
       console.log('added', data);
-      if (!isHistoryActionRef.current) setHistory();
+      const cell = graphRef.current?.getCellById(data.cell.id);
+      const nodeConfig = cell?.getData();
+      // 清空无label组件粘贴时的label值
+      if (!nodeConfig.data.hasLabel && nodeConfig.label !== '') {
+        const newNodeConfig = cloneDeep(nodeConfig);
+        console.log('newNodeConfig', newNodeConfig);
+        set(newNodeConfig, 'label', '');
+        cell?.setData(newNodeConfig);
+      } else {
+        if (!isHistoryActionRef.current) setHistory();
+      }
     });
     graph.on('cell:removed', (data) => {
       console.log('removed', data);
@@ -380,33 +422,21 @@ const MapDesigner: React.FC = () => {
       console.log('changed', data);
       if (!isHistoryActionRef.current) setHistory();
     });
+
+    // graph.freeze();
+
+    // 自行控制zIndex值，原事件不会触发zIndex值更新
     graph.on('cell:change:zIndex', (data) => {
       console.log('zIndex', data);
-      formPanelRef.current.updateFormPanel &&
-        formPanelRef.current.updateFormPanel(false, 'zIndex', data.current);
-      // if (!isHistoryActionRef.current) setHistory()
+      const cell = graphRef.current?.getCellById(data.cell.id);
+      const nodeConfig = cell?.getData();
+      const newNodeConfig = cloneDeep(nodeConfig);
+      console.log('newNodeConfig', newNodeConfig);
+      set(newNodeConfig, 'zIndex', data.current);
+      // 保存zIndex并手动触发记录更新
+      cell?.setData(newNodeConfig);
     });
-    // graph.cleanHistory();
-    // graph.history.on('add', (args) => console.log('add', args));
-    // graph.history.on(
-    //   'undo',
-    //   (args) => {
-    //     console.log('undo', args)
-    //     formPanelRef.current.reloadFormPanel &&
-    //       formPanelRef.current.reloadFormPanel()
-    //   },
-    // );
-    // graph.history.on(
-    //   'redo',
-    //   () =>
-    //     formPanelRef.current.reloadFormPanel &&
-    //     formPanelRef.current.reloadFormPanel(),
-    // );
-    // graph.history.on('change', args => console.log('change', args));
-    // graph.on('node:click', ({ node }) => {
-    //   const nodeData: NsGraph.INodeConfig = node.getData();
-    //   message.success(`${nodeData.id}节点被点击了`);
-    // });
+
     graphRef.current = graph;
   };
 
@@ -433,7 +463,7 @@ const MapDesigner: React.FC = () => {
           showOfficial={false}
           // @ts-ignore
           registerNode={nodePanel}
-          position={{ width: 290, top: 40, bottom: 0, left: 0 }}
+          position={{ width: 300, top: 350, bottom: 0, left: 0 }}
         />
         <ToolbarPanel
           graphRef={graphRef}
@@ -451,6 +481,19 @@ const MapDesigner: React.FC = () => {
         />
         <FlowchartCanvas
           position={{ top: 40, left: 0, right: 0, bottom: 0 }}
+          config={{
+            background: {
+              color: '#303e75',
+            },
+            // grid: {
+            //   visible: true,
+            //   size: 10,
+            // }
+            // guard: (e, view) => {
+            //   console.log('view', e, view)
+            //   return !!view;
+            // },
+          }}
           onConfigChange={(params) => {
             // setHistory();
             formPanelRef.current.reloadFormPanel &&
@@ -477,7 +520,13 @@ const MapDesigner: React.FC = () => {
         // controlMapService={controlMapService}
         // formSchemaService={NsJsonForm.formSchemaService}
         /> */}
-        <KeyBindings config={keybindingConfig} />
+        {/* <KeyBindings config={keybindingConfig} /> */}
+        <KeyBindingsPanel
+          historyRef={historyRef}
+          isHistoryActionRef={isHistoryActionRef}
+          graphRef={graphRef}
+          formPanelRef={formPanelRef}
+        />
         {/* <NodeCollapsePanel
           header={<div> 组件面板 </div>}
           footer={<div> Foorter </div>}

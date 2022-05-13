@@ -44,9 +44,11 @@
 @light-border: 1px solid #d9d9d9;
 
 .userContainer {
-  color: #000;
+  overflow: visible !important;
+  // color: #000;
   :global {
     .xflow-node-panel-collpase.xflow-workspace-panel {
+      left: -301px !important;
       .xflow-node-panel-collpase-icon {
         display: none;
       }
@@ -60,7 +62,8 @@
       }
     }
     .xflow-canvas-root {
-      margin: 0 290px;
+      // margin: 0 290px;
+      margin-right: 290px;
       background: #fff;
     }
     .xflow-json-schema-form {
@@ -81,6 +84,20 @@
 
     .xflow-workspace-toolbar-top {
       border-bottom: 1px solid #d9d9d9;
+      background: #303e75;
+    }
+
+    .xflow-toolbar {
+      background: #303e75;
+    }
+    .x6-toolbar.x6-toolbar-hover-effect .x6-toolbar-item {
+      color: #fff;
+    }
+    .panel.xflow-workspace-panel {
+      background: #303e75;
+    }
+    .xflow-canvas-root > .xflow-x6-canvas > svg.x6-graph-svg {
+      overflow: hidden !important;
     }
 
     // .xflow-custom-minimap {
